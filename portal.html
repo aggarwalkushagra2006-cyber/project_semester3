@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MatchPortal &bull; Job & Internship AI Career Ecosystem</title>
-    <!-- Tailwind CSS CDN -->
+    <title>CareerMatch Pro - AI-Powered Job & Internship Platform</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -12,12 +13,16 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            50: '#eef2ff',
+                        primary: {
+                            50: '#f0f4ff',
                             100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
                             500: '#6366f1',
                             600: '#4f46e5',
                             700: '#4338ca',
+                            800: '#3730a3',
                             900: '#312e81',
                         }
                     }
@@ -25,2320 +30,776 @@
             }
         }
     </script>
+    
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    
     <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --neutral-50: #f9fafb;
+            --neutral-100: #f3f4f6;
+            --neutral-200: #e5e7eb;
+            --neutral-700: #374151;
+            --neutral-800: #1f2937;
+            --neutral-900: #111827;
+        }
+
+        html.dark {
+            --neutral-50: #0f172a;
+            --neutral-100: #1e293b;
+            --neutral-200: #334155;
+            --neutral-700: #cbd5e1;
+            --neutral-800: #e2e8f0;
+            --neutral-900: #f1f5f9;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--neutral-50);
+            color: var(--neutral-900);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        html.dark body {
+            background: var(--neutral-100);
+            color: var(--neutral-800);
+        }
+
+        /* Smooth animations */
+        @keyframes slideInDown {
+            from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        
-        /* 3D Flashcard Flip */
-        .perspective-1000 { perspective: 1000px; }
-        .transform-style-3d { transform-style: preserve-3d; }
-        .backface-hidden { backface-visibility: hidden; }
-        .rotate-y-180 { transform: rotateY(180deg); }
 
-        /* Print formatting for Resume */
-        @media print {
-            body * { visibility: hidden; }
-            #printableResume, #printableResume * { visibility: visible; }
-            #printableResume { position: absolute; left: 0; top: 0; width: 100%; border: none; box-shadow: none; padding: 0; }
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .animate-in { animation: slideInUp 0.4s ease-out; }
+        .fade-in { animation: fadeIn 0.3s ease-out; }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        html.dark .card {
+            background: #1e293b;
+            border-color: #334155;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        html.dark .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--neutral-100);
+            color: var(--neutral-900);
+            border: 1px solid var(--neutral-200);
+        }
+
+        html.dark .btn-secondary {
+            background: var(--neutral-200);
+            color: var(--neutral-50);
+            border-color: #475569;
+        }
+
+        .btn-secondary:hover {
+            background: var(--neutral-200);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #78350f;
+        }
+
+        .badge-primary {
+            background: #e0e7ff;
+            color: #312e81;
+        }
+
+        html.dark .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+        }
+
+        html.dark .badge-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fcd34d;
+        }
+
+        html.dark .badge-primary {
+            background: rgba(79, 70, 229, 0.2);
+            color: #a5b4fc;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--neutral-100); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+
+        /* Loading skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, var(--neutral-200) 25%, var(--neutral-100) 50%, var(--neutral-200) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        html.dark .skeleton {
+            background: linear-gradient(90deg, #334155 25%, #1e293b 50%, #334155 75%);
+            background-size: 200% 100%;
+        }
+
+        /* Inputs */
+        input, select, textarea {
+            background: white;
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        html.dark input, html.dark select, html.dark textarea {
+            background: #1e293b;
+            border-color: #475569;
+            color: var(--neutral-800);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        /* Match score badge */
+        .match-score {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+        }
+
+        /* Navigation transitions */
+        .nav-link {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: transparent;
+            border: none;
+            color: var(--neutral-700);
+        }
+
+        html.dark .nav-link {
+            color: var(--neutral-700);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Toast notification */
+        .toast {
+            animation: slideInDown 0.3s ease-out;
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen antialiased">
+<body class="bg-neutral-50 dark:bg-neutral-100">
 
-    <!-- Top Notification Bar / Active Persona Banner -->
-    <div class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 text-white text-xs sm:text-sm py-2 px-4 shadow-sm border-b border-indigo-700">
-        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-            <div class="flex items-center space-x-2">
-                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                    <i data-lucide="sparkles" class="w-3 h-3 mr-1"></i> AI Career Suite Active
-                </span>
-                <span class="text-indigo-100">
-                    Browsing as: <strong class="text-white" id="currentUserName">Aarav Patel</strong> (<span id="currentUserTitle">AI / ML Student</span>)
-                </span>
-            </div>
-
-            <!-- Profile Switcher Dropdown -->
-            <div class="flex items-center space-x-2">
-                <label for="profileSelect" class="text-indigo-200 hidden sm:inline">Switch Persona:</label>
-                <div class="relative">
-                    <select id="profileSelect" onchange="switchCandidate(this.value)" 
-                            class="bg-indigo-950/80 text-white text-xs rounded-md border border-indigo-600 px-2 py-1 pr-6 focus:outline-none focus:ring-1 focus:ring-indigo-400 cursor-pointer">
-                        <option value="1">Aarav Patel &bull; AI / ML Student</option>
-                        <option value="2">Sophia Rodriguez &bull; Frontend React Dev</option>
-                        <option value="3">Marcus Vance &bull; Full-Stack Python Dev</option>
-                        <option value="4">Priya Sharma &bull; UI/UX Designer</option>
-                    </select>
-                </div>
-                <button onclick="resetData()" title="Reset data" class="text-indigo-300 hover:text-white transition px-2 py-1 rounded bg-indigo-800/40 text-xs flex items-center">
-                    <i data-lucide="rotate-ccw" class="w-3 h-3 mr-1"></i> Reset
-                </button>
-            </div>
+    <!-- Top Banner -->
+    <div id="topBanner" class="bg-gradient-to-r from-primary-600 to-secondary-600 text-white px-4 py-2 text-center text-sm font-medium">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <span>✨ AI-Powered Personalized Job Recommendations</span>
+            <button onclick="document.getElementById('topBanner').style.display='none'" class="hover:opacity-80">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
         </div>
     </div>
 
-    <!-- Main Navigation Bar -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm backdrop-blur-md bg-white/95">
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-white dark:bg-neutral-200 border-b border-neutral-200 dark:border-neutral-700 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <!-- Brand / Logo -->
-                <div class="flex items-center space-x-3">
-                    <div class="flex items-center space-x-2.5 cursor-pointer" onclick="switchTab('jobs')">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
-                            <i data-lucide="compass" class="w-6 h-6"></i>
-                        </div>
-                        <div>
-                            <span class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">MatchPortal</span>
-                            <span class="hidden sm:inline-block ml-1 text-xs px-2 py-0.5 rounded-full font-medium bg-indigo-50 text-indigo-700 border border-indigo-200">AI Suite</span>
-                        </div>
+                <!-- Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('home')">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary-600 to-secondary-600 flex items-center justify-center text-white font-bold text-lg">
+                        C
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-neutral-900 dark:text-neutral-50">CareerMatch</h1>
+                        <p class="text-xs text-neutral-600 dark:text-neutral-700">Pro</p>
                     </div>
                 </div>
 
-                <!-- Navigation Links -->
-                <nav class="hidden md:flex items-center space-x-1">
-                    <button id="nav-jobs" onclick="switchTab('jobs')" class="nav-btn px-3 py-2 rounded-lg text-sm font-semibold text-indigo-600 bg-indigo-50/80 transition flex items-center">
-                        <i data-lucide="briefcase" class="w-4 h-4 mr-1.5"></i> Find Jobs
-                    </button>
-                    <button id="nav-resume" onclick="switchTab('resume')" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition flex items-center">
-                        <i data-lucide="file-text" class="w-4 h-4 mr-1.5 text-amber-500"></i> AI Resume Builder
-                    </button>
-                    <button id="nav-quiz" onclick="switchTab('quiz')" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition flex items-center">
-                        <i data-lucide="help-circle" class="w-4 h-4 mr-1.5 text-emerald-500"></i> Skill Quiz Arena
-                    </button>
-                    <button id="nav-vocabulary" onclick="switchTab('vocabulary')" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition flex items-center">
-                        <i data-lucide="layers" class="w-4 h-4 mr-1.5 text-purple-500"></i> Tech Vocabulary
-                    </button>
-                    <button id="nav-applications" onclick="switchTab('applications')" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition flex items-center">
-                        <i data-lucide="file-check" class="w-4 h-4 mr-1.5"></i> Apps (<span id="appCountNav">2</span>)
-                    </button>
-                    <button id="nav-profile" onclick="switchTab('profile')" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition flex items-center">
-                        <i data-lucide="user-cog" class="w-4 h-4 mr-1.5"></i> Profile
-                    </button>
-                    <button id="nav-recruiter" onclick="switchTab('recruiter')" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition flex items-center">
-                        <i data-lucide="building-2" class="w-4 h-4 mr-1.5"></i> Recruiter
-                    </button>
-                </nav>
+                <!-- Nav Links (Desktop) -->
+                <div class="hidden md:flex items-center gap-1">
+                    <button onclick="switchTab('home')" class="nav-link">Home</button>
+                    <button onclick="switchTab('jobs')" class="nav-link">Jobs</button>
+                    <button onclick="switchTab('internships')" class="nav-link">Internships</button>
+                    <button onclick="switchTab('dashboard')" class="nav-link">Dashboard</button>
+                    <button onclick="switchTab('resume')" class="nav-link">Resume</button>
+                </div>
 
-                <!-- Right Action: User Avatar -->
-                <div class="flex items-center space-x-3">
-                    <div onclick="switchTab('profile')" class="flex items-center space-x-2 p-1.5 pr-3 rounded-full hover:bg-slate-100 transition border border-slate-200 cursor-pointer">
-                        <img id="navAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" 
-                             alt="Avatar" class="w-7 h-7 rounded-full object-cover ring-2 ring-indigo-500/30">
-                        <div class="text-left hidden lg:block">
-                            <p class="text-xs font-semibold text-slate-800 leading-tight" id="navName">Aarav Patel</p>
-                            <p class="text-[10px] text-slate-500 leading-tight" id="navRole">Internship Seeker</p>
-                        </div>
+                <!-- Right Actions -->
+                <div class="flex items-center gap-3">
+                    <!-- Theme Toggle -->
+                    <button id="themeToggle" onclick="toggleTheme()" class="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 transition">
+                        <i data-lucide="sun" class="w-5 h-5 text-neutral-900 dark:hidden"></i>
+                        <i data-lucide="moon" class="w-5 h-5 text-neutral-800 hidden dark:block"></i>
+                    </button>
+
+                    <!-- Notifications -->
+                    <button class="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 transition relative">
+                        <i data-lucide="bell" class="w-5 h-5 text-neutral-900 dark:text-neutral-800"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-danger rounded-full"></span>
+                    </button>
+
+                    <!-- Profile Dropdown -->
+                    <div class="hidden md:flex items-center gap-2 pl-3 border-l border-neutral-200 dark:border-neutral-700">
+                        <img id="navAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Avatar" class="w-8 h-8 rounded-full object-cover">
+                        <button onclick="toggleProfileMenu()" class="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg transition">
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-neutral-900 dark:text-neutral-800"></i>
+                        </button>
                     </div>
+
+                    <!-- Mobile Menu -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700">
+                        <i data-lucide="menu" class="w-5 h-5 text-neutral-900 dark:text-neutral-800"></i>
+                    </button>
                 </div>
             </div>
         </div>
-    </header>
 
-    <!-- Global Toast Alert Container -->
-    <div id="toastContainer" class="fixed top-20 right-6 z-50 space-y-2 pointer-events-none"></div>
+        <!-- Profile Dropdown Menu -->
+        <div id="profileMenu" class="hidden absolute right-4 top-16 w-48 bg-white dark:bg-neutral-200 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-700 overflow-hidden">
+            <div class="p-4 border-b border-neutral-200 dark:border-neutral-700">
+                <p class="font-semibold text-neutral-900 dark:text-neutral-50" id="profileName">Aarav Patel</p>
+                <p class="text-xs text-neutral-600 dark:text-neutral-700">AI / ML Student</p>
+            </div>
+            <a onclick="switchTab('profile')" class="block px-4 py-2 text-neutral-700 dark:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-700">
+                <i data-lucide="user" class="w-4 h-4 inline mr-2"></i> Profile
+            </a>
+            <a onclick="switchTab('applications')" class="block px-4 py-2 text-neutral-700 dark:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-700">
+                <i data-lucide="briefcase" class="w-4 h-4 inline mr-2"></i> Applications
+            </a>
+            <a onclick="switchTab('settings')" class="block px-4 py-2 text-neutral-700 dark:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-700">
+                <i data-lucide="settings" class="w-4 h-4 inline mr-2"></i> Settings
+            </a>
+            <div class="border-t border-neutral-200 dark:border-neutral-700 px-4 py-2">
+                <button onclick="logout()" class="w-full btn btn-secondary text-sm justify-center">
+                    <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+                </button>
+            </div>
+        </div>
+    </nav>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+    <!-- Mobile Menu (Hidden by default) -->
+    <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-neutral-200 border-b border-neutral-200 dark:border-neutral-700">
+        <button onclick="switchTab('home')" class="block w-full text-left px-4 py-2 text-neutral-700 dark:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-700">Home</button>
+        <button onclick="switchTab('jobs')" class="block w-full text-left px-4 py-2 text-neutral-700 dark:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-700">Jobs</button>
+        <button onclick="switchTab('dashboard')" class="block w-full text-left px-4 py-2 text-neutral-700 dark:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-700">Dashboard</button>
+        <button onclick="switchTab('profile')" class="block w-full text-left px-4 py-2 text-neutral-700 dark:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-700">Profile</button>
+    </div>
 
-        <!-- ============================================================== -->
-        <!-- TAB 1: FIND JOBS & RECOMMENDATIONS -->
-        <!-- ============================================================== -->
-        <section id="tab-jobs" class="space-y-8">
-            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-900 via-indigo-800 to-purple-950 text-white p-6 sm:p-8 shadow-xl border border-indigo-700/50">
-                <div class="relative z-10 max-w-3xl">
-                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-4 border border-indigo-400/30">
-                        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
-                        <span>TF-IDF + Skill Vector Recommendation Engine</span>
-                    </div>
-                    <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
-                        Personalized Recommendations for <span id="heroUserName" class="bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">Aarav</span>
+    <!-- Main Content -->
+    <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ===== HOME TAB ===== -->
+        <section id="tab-home" class="space-y-12 animate-in">
+            <!-- Hero Section -->
+            <div class="space-y-8">
+                <div class="space-y-4">
+                    <h1 class="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-neutral-50">
+                        Find the Right Job.<br><span class="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">Build Your Career.</span>
                     </h1>
-                    <p class="mt-2 text-indigo-100 text-sm sm:text-base leading-relaxed">
-                        Ranked using weighted multi-factor scoring (55% Skill Overlap, 30% Semantic Cosine Fit, 15% Role Alignment):
-                    </p>
-                    <div class="mt-3 flex flex-wrap gap-1.5" id="heroSkillsList"></div>
-                </div>
-                <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="absolute right-40 -top-10 w-48 h-48 bg-indigo-400/20 rounded-full blur-2xl pointer-events-none"></div>
-            </div>
-
-            <!-- Top AI Picks -->
-            <div id="topPicksSection" class="space-y-3">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-lg font-bold text-slate-900 flex items-center">
-                        <i data-lucide="flame" class="w-5 h-5 text-amber-500 mr-2"></i> Highest Match Recommendations (Score &ge; 70%)
-                    </h2>
-                    <span class="text-xs text-slate-500 font-medium">Top algorithm picks</span>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="topPicksContainer"></div>
-            </div>
-
-            <!-- Search & Filters -->
-            <div class="bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-slate-200 space-y-4">
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <div class="relative flex-1">
-                        <i data-lucide="search" class="w-5 h-5 text-slate-400 absolute left-3.5 top-3"></i>
-                        <input type="text" id="searchInput" oninput="renderJobs()" placeholder="Search by title, company, or skills (e.g. Python, React, SQL, PyTorch)..." 
-                               class="w-full pl-11 pr-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <button onclick="resetFilters()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition flex items-center justify-center">
-                        <i data-lucide="x" class="w-4 h-4 mr-1"></i> Reset Filters
-                    </button>
-                </div>
-
-                <div class="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-slate-100 text-xs">
-                    <div class="flex items-center space-x-1.5 flex-wrap">
-                        <span class="text-slate-500 font-medium mr-1">Type:</span>
-                        <button onclick="setFilterType('All')" class="filter-type-btn px-2.5 py-1 rounded-md font-medium transition bg-indigo-600 text-white" data-type="All">All</button>
-                        <button onclick="setFilterType('Internship')" class="filter-type-btn px-2.5 py-1 rounded-md font-medium transition bg-slate-100 text-slate-600 hover:bg-slate-200" data-type="Internship">Internship</button>
-                        <button onclick="setFilterType('Full-time')" class="filter-type-btn px-2.5 py-1 rounded-md font-medium transition bg-slate-100 text-slate-600 hover:bg-slate-200" data-type="Full-time">Full-time</button>
-                    </div>
-
-                    <div class="flex items-center space-x-1.5 flex-wrap">
-                        <span class="text-slate-500 font-medium mr-1"><i data-lucide="gauge" class="w-3.5 h-3.5 inline mr-0.5"></i> Min Match:</span>
-                        <button onclick="setMinMatch(0)" class="filter-match-btn px-2.5 py-1 rounded-md font-medium transition bg-emerald-600 text-white" data-match="0">All</button>
-                        <button onclick="setMinMatch(50)" class="filter-match-btn px-2.5 py-1 rounded-md font-medium transition bg-slate-100 text-slate-600 hover:bg-slate-200" data-match="50">50%+</button>
-                        <button onclick="setMinMatch(70)" class="filter-match-btn px-2.5 py-1 rounded-md font-medium transition bg-slate-100 text-slate-600 hover:bg-slate-200" data-match="70">70%+ Strong</button>
-                        <button onclick="setMinMatch(85)" class="filter-match-btn px-2.5 py-1 rounded-md font-medium transition bg-slate-100 text-slate-600 hover:bg-slate-200" data-match="85">85%+ Exceptional</button>
-                    </div>
-
-                    <div class="flex items-center space-x-2">
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="remoteOnlyToggle" onchange="renderJobs()" class="sr-only peer">
-                            <div class="relative w-8 h-4 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-600"></div>
-                            <span class="ml-2 text-xs font-medium text-slate-600">Remote Only</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Jobs Header -->
-            <div class="flex items-center justify-between">
-                <div>
-                    <h2 class="text-xl font-bold text-slate-900">All Opportunities</h2>
-                    <p class="text-xs text-slate-500">Sorted by match score for current candidate</p>
-                </div>
-                <span id="jobCountBadge" class="text-xs font-semibold px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full border border-slate-200">
-                    Showing 8 positions
-                </span>
-            </div>
-
-            <!-- Job Cards Grid -->
-            <div class="grid grid-cols-1 gap-4" id="jobsListContainer"></div>
-        </section>
-
-        <!-- ============================================================== -->
-        <!-- TAB 2: AI RESUME BUILDER & ATS SCANNER (NEW!) -->
-        <!-- ============================================================== -->
-        <section id="tab-resume" class="space-y-6 hidden">
-            <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 rounded-2xl p-6 sm:p-8 text-white shadow-lg">
-                <div class="max-w-2xl space-y-2">
-                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-white/20 border border-white/30 uppercase tracking-wider inline-flex items-center">
-                        <i data-lucide="sparkles" class="w-3.5 h-3.5 mr-1 text-yellow-200"></i> AI Resume Studio
-                    </span>
-                    <h1 class="text-2xl sm:text-3xl font-extrabold">ATS-Optimized AI Resume Builder</h1>
-                    <p class="text-xs sm:text-sm text-orange-100 leading-relaxed">
-                        Generate professional, Google X-Y-Z formula bullet points tailored to your target job role. Check real-time ATS match compatibility and export or print directly.
+                    <p class="text-xl text-neutral-600 dark:text-neutral-700 max-w-2xl">
+                        Discover opportunities matched to your skills using AI-powered recommendations. Connect with companies that value your potential.
                     </p>
                 </div>
-            </div>
 
-            <!-- Two-Column Generator & Preview -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Controls Column -->
-                <div class="lg:col-span-5 space-y-4">
-                    <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
-                        <h3 class="font-bold text-slate-900 text-sm flex items-center">
-                            <i data-lucide="sliders" class="w-4 h-4 text-indigo-600 mr-2"></i> Resume Settings & Tailoring
-                        </h3>
-
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Tailor For Target Role:</label>
-                            <select id="resumeTargetJobSelect" onchange="tailorResumeToJob()" class="w-full p-2.5 border rounded-lg text-xs bg-white focus:ring-2 focus:ring-indigo-500">
-                                <option value="ai">AI / Machine Learning Engineer</option>
-                                <option value="frontend">Frontend React Developer</option>
-                                <option value="fullstack">Full-Stack Python & Cloud Engineer</option>
-                                <option value="data">Data Scientist & Analyst</option>
-                                <option value="design">UI/UX Product Designer</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Resume Style Template:</label>
-                            <div class="grid grid-cols-3 gap-2">
-                                <button type="button" onclick="setResumeTheme('modern')" class="resume-theme-btn p-2 rounded-lg text-xs font-semibold border border-indigo-600 bg-indigo-50 text-indigo-700" data-theme="modern">Modern Tech</button>
-                                <button type="button" onclick="setResumeTheme('minimal')" class="resume-theme-btn p-2 rounded-lg text-xs font-semibold border border-slate-200 text-slate-600 hover:bg-slate-50" data-theme="minimal">Minimalist</button>
-                                <button type="button" onclick="setResumeTheme('executive')" class="resume-theme-btn p-2 rounded-lg text-xs font-semibold border border-slate-200 text-slate-600 hover:bg-slate-50" data-theme="executive">Executive</button>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Highlight Achievements (Auto-suggested):</label>
-                            <textarea id="resumeExtraAchievements" rows="3" class="w-full p-2.5 border rounded-lg text-xs" placeholder="e.g. Optimized model latency by 35%; Won 1st place in university hackathon; Built responsive customer portal."></textarea>
-                        </div>
-
-                        <div class="pt-2 flex flex-col gap-2">
-                            <button onclick="generateAIResume()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold shadow-md transition flex items-center justify-center">
-                                <i data-lucide="wand-2" class="w-4 h-4 mr-1.5"></i> Regenerate AI Content
-                            </button>
-                            <div class="flex gap-2">
-                                <button onclick="window.print()" class="flex-1 py-2 border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-semibold transition flex items-center justify-center">
-                                    <i data-lucide="printer" class="w-3.5 h-3.5 mr-1.5"></i> Print / Save PDF
-                                </button>
-                                <button onclick="copyResumeText()" class="flex-1 py-2 border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-semibold transition flex items-center justify-center">
-                                    <i data-lucide="copy" class="w-3.5 h-3.5 mr-1.5"></i> Copy Text
-                                </button>
-                            </div>
-                        </div>
+                <!-- Search Bar -->
+                <div class="flex flex-col md:flex-row gap-3">
+                    <div class="flex-1 relative">
+                        <i data-lucide="search" class="w-5 h-5 absolute left-3 top-3 text-neutral-400"></i>
+                        <input type="text" id="homeSearchInput" placeholder="Job title, skill, or company..." class="w-full pl-10 pr-4 py-3 rounded-lg border-2 border-neutral-200 dark:border-neutral-700 focus:border-primary-600">
                     </div>
+                    <button onclick="switchTab('jobs')" class="btn btn-primary px-6">Search Jobs</button>
+                </div>
 
-                    <!-- ATS Score Meter -->
-                    <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3">
-                        <div class="flex items-center justify-between">
-                            <h4 class="font-bold text-slate-900 text-xs flex items-center">
-                                <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600 mr-1.5"></i> ATS Compatibility Score
-                            </h4>
-                            <span class="px-2 py-0.5 rounded text-xs font-extrabold bg-emerald-100 text-emerald-800" id="atsScoreBadge">94 / 100</span>
-                        </div>
-                        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                            <div id="atsScoreBar" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 94%"></div>
-                        </div>
-                        <p class="text-[11px] text-slate-500" id="atsFeedback">
-                            &check; Strong keyword density: High match with target job descriptions, industry-standard section headings, and quantifiable action verbs.
-                        </p>
+                <!-- Stats -->
+                <div class="grid grid-cols-3 md:grid-cols-6 gap-4">
+                    <div class="card text-center">
+                        <p class="text-2xl font-bold text-primary-600">10K+</p>
+                        <p class="text-xs text-neutral-600 dark:text-neutral-700">Active Jobs</p>
                     </div>
-                </div>
-
-                <!-- Live Resume Canvas Preview -->
-                <div class="lg:col-span-7">
-                    <div class="bg-white rounded-2xl p-8 sm:p-10 border border-slate-300 shadow-lg text-slate-800 space-y-6 min-h-[700px]" id="printableResume">
-                        <!-- Injected dynamically by generateAIResume() -->
+                    <div class="card text-center">
+                        <p class="text-2xl font-bold text-primary-600">500+</p>
+                        <p class="text-xs text-neutral-600 dark:text-neutral-700">Companies</p>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ============================================================== -->
-        <!-- TAB 3: SKILL QUIZ ARENA (NEW!) -->
-        <!-- ============================================================== -->
-        <section id="tab-quiz" class="space-y-6 hidden">
-            <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 rounded-2xl p-6 sm:p-8 text-white shadow-lg">
-                <div class="max-w-2xl space-y-2">
-                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-white/20 border border-white/30 uppercase tracking-wider inline-flex items-center">
-                        <i data-lucide="award" class="w-3.5 h-3.5 mr-1 text-emerald-200"></i> Role Assessment & Certification
-                    </span>
-                    <h1 class="text-2xl sm:text-3xl font-extrabold">Technical Skill Assessment Arena</h1>
-                    <p class="text-xs sm:text-sm text-teal-100 leading-relaxed">
-                        Select the track you want to practice. Score 80%+ to earn verified skill badges that automatically boost your profile recommendation match percentage!
-                    </p>
-                </div>
-            </div>
-
-            <!-- Track Selector -->
-            <div class="flex flex-wrap gap-2">
-                <button onclick="selectQuizTrack('ai')" class="quiz-track-btn px-4 py-2 rounded-xl text-xs font-bold transition border border-emerald-600 bg-emerald-50 text-emerald-800" data-track="ai">
-                    <i data-lucide="cpu" class="w-3.5 h-3.5 inline mr-1"></i> Python & Machine Learning
-                </button>
-                <button onclick="selectQuizTrack('react')" class="quiz-track-btn px-4 py-2 rounded-xl text-xs font-bold transition border border-slate-200 bg-white text-slate-700 hover:bg-slate-50" data-track="react">
-                    <i data-lucide="code" class="w-3.5 h-3.5 inline mr-1"></i> React & Modern Frontend
-                </button>
-                <button onclick="selectQuizTrack('fullstack')" class="quiz-track-btn px-4 py-2 rounded-xl text-xs font-bold transition border border-slate-200 bg-white text-slate-700 hover:bg-slate-50" data-track="fullstack">
-                    <i data-lucide="server" class="w-3.5 h-3.5 inline mr-1"></i> Full-Stack & Python APIs
-                </button>
-                <button onclick="selectQuizTrack('sql')" class="quiz-track-btn px-4 py-2 rounded-xl text-xs font-bold transition border border-slate-200 bg-white text-slate-700 hover:bg-slate-50" data-track="sql">
-                    <i data-lucide="database" class="w-3.5 h-3.5 inline mr-1"></i> SQL & Data Science
-                </button>
-            </div>
-
-            <!-- Quiz Card -->
-            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm max-w-3xl mx-auto space-y-6" id="quizActiveCard">
-                <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-                    <div>
-                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block" id="quizQuestionCount">Question 1 of 5</span>
-                        <h3 class="font-bold text-slate-800 text-sm" id="quizTrackTitle">Python & Machine Learning Track</h3>
+                    <div class="card text-center">
+                        <p class="text-2xl font-bold text-primary-600">95%</p>
+                        <p class="text-xs text-neutral-600 dark:text-neutral-700">Match Rate</p>
                     </div>
-                    <div class="text-right">
-                        <span class="text-xs font-extrabold text-emerald-600" id="quizLiveScore">Score: 0 / 0</span>
+                    <div class="card text-center">
+                        <p class="text-2xl font-bold text-success">₹15L+</p>
+                        <p class="text-xs text-neutral-600 dark:text-neutral-700">Avg Salary</p>
                     </div>
-                </div>
-
-                <!-- Question Text -->
-                <div class="text-base sm:text-lg font-bold text-slate-900 leading-snug" id="quizQuestionText">
-                    <!-- Injected -->
-                </div>
-
-                <!-- Options Grid -->
-                <div class="space-y-2.5" id="quizOptionsContainer">
-                    <!-- Injected -->
-                </div>
-
-                <!-- Explanation Box -->
-                <div id="quizExplanationBox" class="hidden p-4 rounded-xl bg-slate-50 border text-xs space-y-1">
-                    <strong class="font-bold" id="quizExplanationStatus">Correct!</strong>
-                    <p class="text-slate-600 leading-relaxed" id="quizExplanationText"></p>
-                </div>
-
-                <!-- Action Button -->
-                <div class="pt-2 flex justify-end">
-                    <button id="quizNextBtn" onclick="handleQuizNext()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg text-xs shadow-md transition disabled:opacity-50">
-                        Next Question &rarr;
-                    </button>
-                </div>
-            </div>
-
-            <!-- Quiz Completed Modal/Card -->
-            <div id="quizResultCard" class="hidden bg-white rounded-2xl p-8 border border-slate-200 shadow-md max-w-lg mx-auto text-center space-y-4">
-                <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-2xl font-bold">
-                    &check;
-                </div>
-                <h3 class="text-xl font-extrabold text-slate-900">Quiz Complete!</h3>
-                <p class="text-sm text-slate-600" id="quizFinalScoreSummary">You scored 5 out of 5 (100%)</p>
-                <div id="quizBadgeAward" class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-800 font-semibold flex items-center justify-center">
-                    <i data-lucide="award" class="w-4 h-4 mr-1 text-amber-600"></i> Verified Badge Added to your Profile!
-                </div>
-                <div class="pt-2 flex justify-center space-x-2">
-                    <button onclick="restartQuiz()" class="px-5 py-2.5 bg-slate-800 text-white rounded-lg text-xs font-bold">Try Another Track</button>
-                    <button onclick="switchTab('jobs')" class="px-5 py-2.5 bg-indigo-600 text-white rounded-lg text-xs font-bold">Check Boosted Jobs</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- ============================================================== -->
-        <!-- TAB 4: TECH VOCABULARY & FLASHCARDS DRILL (NEW!) -->
-        <!-- ============================================================== -->
-        <section id="tab-vocabulary" class="space-y-6 hidden">
-            <div class="bg-gradient-to-r from-purple-800 via-indigo-800 to-blue-900 rounded-2xl p-6 sm:p-8 text-white shadow-lg">
-                <div class="max-w-2xl space-y-2">
-                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-white/20 border border-white/30 uppercase tracking-wider inline-flex items-center">
-                        <i data-lucide="book-open" class="w-3.5 h-3.5 mr-1 text-purple-200"></i> Interview Terminology Drill
-                    </span>
-                    <h1 class="text-2xl sm:text-3xl font-extrabold">Technical Vocabulary & Flashcards</h1>
-                    <p class="text-xs sm:text-sm text-indigo-100 leading-relaxed">
-                        Master the high-yield terminology, interview analogies, and architectural concepts recruiters look for during technical interviews.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Category Filter -->
-            <div class="flex flex-wrap items-center justify-between gap-3">
-                <div class="flex flex-wrap gap-2">
-                    <button onclick="filterVocab('All')" class="vocab-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white" data-cat="All">All Concepts (12)</button>
-                    <button onclick="filterVocab('AI / ML')" class="vocab-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200" data-cat="AI / ML">AI & ML</button>
-                    <button onclick="filterVocab('Frontend')" class="vocab-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200" data-cat="Frontend">Frontend & React</button>
-                    <button onclick="filterVocab('Backend')" class="vocab-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200" data-cat="Backend">Backend & Systems</button>
-                </div>
-                <span class="text-xs text-slate-400 font-medium">Click card to reveal definition</span>
-            </div>
-
-            <!-- Flashcard Container -->
-            <div class="max-w-xl mx-auto py-4">
-                <div class="perspective-1000 w-full h-80 cursor-pointer" onclick="flipFlashcard()">
-                    <div id="flashcardInner" class="relative w-full h-full duration-500 transform-style-3d shadow-xl rounded-2xl border border-slate-200">
-                        <!-- FRONT -->
-                        <div class="absolute inset-0 w-full h-full bg-white rounded-2xl p-8 flex flex-col justify-between backface-hidden border border-indigo-100">
-                            <div class="flex items-center justify-between">
-                                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700" id="vocabCardCategory">Category</span>
-                                <span class="text-xs text-slate-400 font-medium" id="vocabCardCounter">1 / 12</span>
-                            </div>
-                            <div class="text-center space-y-2">
-                                <h3 class="text-2xl font-black text-slate-900" id="vocabCardTerm">Term</h3>
-                                <p class="text-xs text-slate-400 italic">Click card to reveal definition & interview answer</p>
-                            </div>
-                            <div class="text-center text-xs font-semibold text-indigo-600 flex items-center justify-center">
-                                <i data-lucide="rotate-cw" class="w-3.5 h-3.5 mr-1"></i> Flip Card
-                            </div>
-                        </div>
-
-                        <!-- BACK -->
-                        <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-indigo-900 to-slate-900 text-white rounded-2xl p-8 flex flex-col justify-between backface-hidden rotate-y-180">
-                            <div class="flex items-center justify-between text-indigo-200 text-xs">
-                                <span>Concept Explanation</span>
-                                <span class="font-bold" id="vocabCardTermBack">Term</span>
-                            </div>
-                            <div class="space-y-3">
-                                <p class="text-sm text-indigo-100 leading-relaxed" id="vocabCardDefinition">Definition goes here...</p>
-                                <div class="p-2.5 rounded-lg bg-white/10 text-xs text-amber-200 border border-white/10" id="vocabCardAnalogy">
-                                    💡 <strong>Interview Tip:</strong> Analogy here
-                                </div>
-                            </div>
-                            <div class="text-center text-xs text-indigo-300">Click to flip back</div>
-                        </div>
+                    <div class="card text-center">
+                        <p class="text-2xl font-bold text-success">2K+</p>
+                        <p class="text-xs text-neutral-600 dark:text-neutral-700">Placed Users</p>
                     </div>
-                </div>
-
-                <!-- Navigation Controls -->
-                <div class="flex items-center justify-between mt-6">
-                    <button onclick="prevVocab()" class="px-4 py-2 border rounded-lg text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 transition flex items-center">
-                        <i data-lucide="chevron-left" class="w-4 h-4 mr-1"></i> Previous
-                    </button>
-                    <button onclick="markVocabMastered()" class="px-4 py-2 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold hover:bg-emerald-100 transition flex items-center">
-                        <i data-lucide="check" class="w-4 h-4 mr-1"></i> Mark Mastered (<span id="masteredCount">0</span>)
-                    </button>
-                    <button onclick="nextVocab()" class="px-4 py-2 border rounded-lg text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 transition flex items-center">
-                        Next <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- ============================================================== -->
-        <!-- TAB 5: MY APPLICATION PIPELINE -->
-        <!-- ============================================================== -->
-        <section id="tab-applications" class="space-y-6 hidden">
-            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                        <h1 class="text-xl sm:text-2xl font-bold text-slate-900">Application Pipeline</h1>
-                        <p class="text-xs sm:text-sm text-slate-500 mt-1">
-                            Track the status of your applications for <strong class="text-slate-800" id="appPipelineCandidateName">Aarav Patel</strong>.
-                        </p>
-                    </div>
-                    <button onclick="switchTab('jobs')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-xs transition flex items-center justify-center self-start sm:self-auto">
-                        <i data-lucide="plus" class="w-4 h-4 mr-1"></i> Explore More Jobs
-                    </button>
-                </div>
-
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-6 border-t border-slate-100">
-                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
-                        <span class="text-xl font-extrabold text-slate-900" id="statTotalApps">0</span>
-                        <span class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider">Total Applied</span>
-                    </div>
-                    <div class="p-3 rounded-xl bg-blue-50 border border-blue-200 text-center">
-                        <span class="text-xl font-extrabold text-blue-700" id="statReviewingApps">0</span>
-                        <span class="block text-[11px] font-medium text-blue-600 uppercase tracking-wider">Under Review</span>
-                    </div>
-                    <div class="p-3 rounded-xl bg-purple-50 border border-purple-200 text-center">
-                        <span class="text-xl font-extrabold text-purple-700" id="statInterviewApps">0</span>
-                        <span class="block text-[11px] font-medium text-purple-600 uppercase tracking-wider">Interviewing</span>
-                    </div>
-                    <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-center">
-                        <span class="text-xl font-extrabold text-emerald-700" id="statOfferApps">0</span>
-                        <span class="block text-[11px] font-medium text-emerald-600 uppercase tracking-wider">Shortlisted / Offer</span>
+                    <div class="card text-center">
+                        <p class="text-2xl font-bold text-success">24/7</p>
+                        <p class="text-xs text-neutral-600 dark:text-neutral-700">AI Support</p>
                     </div>
                 </div>
             </div>
 
-            <div class="space-y-4" id="applicationsContainer"></div>
-        </section>
-
-        <!-- ============================================================== -->
-        <!-- TAB 6: CANDIDATE PROFILE & SKILLS -->
-        <!-- ============================================================== -->
-        <section id="tab-profile" class="max-w-4xl mx-auto space-y-6 hidden">
-            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6 text-center sm:text-left">
-                <img id="profileCardAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" 
-                     alt="Candidate" class="w-20 h-20 rounded-2xl object-cover ring-4 ring-indigo-50 shadow-md">
-                <div class="flex-1">
-                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-1">
-                        <h1 class="text-xl sm:text-2xl font-bold text-slate-900" id="profileCardName">Aarav Patel</h1>
-                        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200" id="profileCardType">
-                            Internship Seeker
-                        </span>
-                        <span id="profileVerifiedBadge" class="hidden px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300">
-                            ★ Quiz Verified Pro
-                        </span>
-                    </div>
-                    <p class="text-sm font-medium text-slate-600" id="profileCardTitle">Aspiring Machine Learning & Data Science Engineer</p>
-                    <p class="text-xs text-slate-500 mt-1 flex items-center justify-center sm:justify-start">
-                        <i data-lucide="graduation-cap" class="w-3.5 h-3.5 mr-1 text-slate-400"></i> <span id="profileCardEdu">B.Tech in Computer Science</span>
-                    </p>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm">
-                <form id="profileForm" onsubmit="saveProfile(event)" class="space-y-6">
-                    <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center">
-                        <i data-lucide="user-pen" class="w-5 h-5 text-indigo-600 mr-2"></i> Edit Candidate Profile
-                    </h2>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Full Name</label>
-                            <input type="text" id="profNameInput" required class="w-full p-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Professional Title</label>
-                            <input type="text" id="profTitleInput" required class="w-full p-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Experience Level</label>
-                            <select id="profExpInput" class="w-full p-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                <option value="Fresher / Student">Fresher / Student</option>
-                                <option value="1-2 Years">1-2 Years</option>
-                                <option value="3-5 Years">3-5 Years</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Preferred Opportunity Type</label>
-                            <select id="profTypeInput" class="w-full p-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                <option value="Internship">Internship</option>
-                                <option value="Full-time">Full-time</option>
-                                <option value="Any">Any</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Education</label>
-                            <input type="text" id="profEduInput" class="w-full p-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        </div>
-                    </div>
-
-                    <div class="space-y-3 pt-3 border-t border-slate-100">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-900 uppercase tracking-wider">
-                                    Your Technical Skills
-                                </label>
-                                <p class="text-xs text-slate-500">Used by recommendation algorithm to score jobs.</p>
-                            </div>
-                            <span id="profSkillCount" class="text-xs font-semibold px-2 py-0.5 rounded bg-indigo-50 text-indigo-700">0 Skills</span>
-                        </div>
-
-                        <div id="profSkillsChips" class="min-h-12 p-3 rounded-xl border border-slate-200 bg-slate-50 flex flex-wrap gap-2 items-center"></div>
-
-                        <div class="flex gap-2">
-                            <input type="text" id="addSkillTextInput" placeholder="Type a skill (e.g. PyTorch, Docker, React, SQL) and press Enter..." 
-                                   class="flex-1 p-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            <button type="button" onclick="handleAddSkillBtn()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-semibold transition">
-                                Add Skill
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="pt-3 border-t border-slate-100">
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">About / Bio</label>
-                        <textarea id="profBioInput" rows="3" class="w-full p-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-                    </div>
-
-                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
-                        <span class="text-xs text-slate-500">Recommendations refresh immediately after saving.</span>
-                        <button type="submit" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg text-sm shadow-md transition flex items-center">
-                            <i data-lucide="save" class="w-4 h-4 mr-1.5"></i> Save Profile & Update
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </section>
-
-        <!-- ============================================================== -->
-        <!-- TAB 7: RECRUITER PORTAL -->
-        <!-- ============================================================== -->
-        <section id="tab-recruiter" class="space-y-6 hidden">
-            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <div class="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200 mb-2">
-                        <i data-lucide="building" class="w-3.5 h-3.5"></i>
-                        <span>Recruiter Dashboard</span>
-                    </div>
-                    <h1 class="text-xl sm:text-2xl font-bold text-slate-900">Applicant Pipeline & Talent Discovery</h1>
-                    <p class="text-xs sm:text-sm text-slate-500 mt-1">Review applicant match rankings or post new job listings.</p>
-                </div>
-                <button onclick="openPostJobModal()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold shadow-md shadow-indigo-500/20 transition flex items-center justify-center self-start sm:self-auto">
-                    <i data-lucide="plus-circle" class="w-4 h-4 mr-2"></i> Post New Opportunity
-                </button>
-            </div>
-
-            <!-- Job Selector -->
-            <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
-                <div class="flex items-center space-x-2">
-                    <label for="recruiterJobSelect" class="text-xs font-semibold text-slate-500 whitespace-nowrap">Select Job:</label>
-                    <select id="recruiterJobSelect" onchange="renderRecruiterView()" class="p-2 rounded-lg border border-slate-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"></select>
-                </div>
-                <div id="recruiterJobSummary" class="text-xs text-slate-500 flex items-center space-x-3"></div>
-            </div>
-
-            <!-- Applicants Table -->
+            <!-- Recommended Section -->
             <div class="space-y-4">
-                <h2 class="text-lg font-bold text-slate-900 flex items-center">
-                    <i data-lucide="users" class="w-5 h-5 text-indigo-600 mr-2"></i> 
-                    Applicants (<span id="recruiterAppCount">0</span>)
-                </h2>
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden" id="recruiterAppsTableWrapper"></div>
+                <h2 class="text-2xl font-bold text-neutral-900 dark:text-neutral-50">Recommended for You</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="homeRecommended">
+                    <!-- Populated by JS -->
+                </div>
             </div>
 
-            <!-- Talent Scouting -->
-            <div class="space-y-4 pt-6">
-                <div>
-                    <h2 class="text-lg font-bold text-slate-900 flex items-center">
-                        <i data-lucide="sparkles" class="w-5 h-5 text-amber-500 mr-2"></i> 
-                        Talent Scouting: Candidates Matched by AI
-                    </h2>
-                    <p class="text-xs text-slate-500">All registered candidates scored automatically for this job's requirements</p>
+            <!-- How It Works -->
+            <div class="space-y-6">
+                <h2 class="text-2xl font-bold text-neutral-900 dark:text-neutral-50">How It Works</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="space-y-3">
+                        <div class="w-12 h-12 rounded-lg bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600">
+                            <i data-lucide="user" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-semibold text-neutral-900 dark:text-neutral-50">1. Create Profile</h3>
+                        <p class="text-sm text-neutral-600 dark:text-neutral-700">Set up your profile with skills and experience</p>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="w-12 h-12 rounded-lg bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600">
+                            <i data-lucide="brain" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-semibold text-neutral-900 dark:text-neutral-50">2. AI Matching</h3>
+                        <p class="text-sm text-neutral-600 dark:text-neutral-700">Our AI analyzes and matches you with ideal jobs</p>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="w-12 h-12 rounded-lg bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600">
+                            <i data-lucide="star" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-semibold text-neutral-900 dark:text-neutral-50">3. Get Matches</h3>
+                        <p class="text-sm text-neutral-600 dark:text-neutral-700">Receive personalized job recommendations</p>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="w-12 h-12 rounded-lg bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600">
+                            <i data-lucide="briefcase" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-semibold text-neutral-900 dark:text-neutral-50">4. Apply & Win</h3>
+                        <p class="text-sm text-neutral-600 dark:text-neutral-700">Apply to jobs and land your dream role</p>
+                    </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="recruiterTalentGrid"></div>
+            </div>
+        </section>
+
+        <!-- ===== JOBS TAB ===== -->
+        <section id="tab-jobs" class="hidden space-y-6 animate-in">
+            <!-- Filter Section -->
+            <div class="card space-y-4">
+                <h2 class="font-semibold text-neutral-900 dark:text-neutral-50">Search & Filter</h2>
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                    <input type="text" id="jobSearch" placeholder="Job title, company..." class="col-span-2" oninput="filterJobs()">
+                    <select id="jobLocation" onchange="filterJobs()">
+                        <option value="">All Locations</option>
+                        <option value="remote">Remote</option>
+                        <option value="bangalore">Bangalore</option>
+                    </select>
+                    <select id="jobType" onchange="filterJobs()">
+                        <option value="">All Types</option>
+                        <option value="internship">Internship</option>
+                        <option value="full-time">Full-time</option>
+                    </select>
+                    <button onclick="resetJobFilters()" class="btn btn-secondary">Reset</button>
+                </div>
+            </div>
+
+            <!-- Job Results -->
+            <div class="space-y-4" id="jobsContainer">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ===== DASHBOARD TAB ===== -->
+        <section id="tab-dashboard" class="hidden space-y-6 animate-in">
+            <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-50">Dashboard</h1>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="card space-y-2">
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm text-neutral-600 dark:text-neutral-700">Applications</p>
+                        <i data-lucide="send" class="w-4 h-4 text-primary-600"></i>
+                    </div>
+                    <p class="text-3xl font-bold text-neutral-900 dark:text-neutral-50">12</p>
+                </div>
+                <div class="card space-y-2">
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm text-neutral-600 dark:text-neutral-700">Saved Jobs</p>
+                        <i data-lucide="bookmark" class="w-4 h-4 text-primary-600"></i>
+                    </div>
+                    <p class="text-3xl font-bold text-neutral-900 dark:text-neutral-50">8</p>
+                </div>
+                <div class="card space-y-2">
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm text-neutral-600 dark:text-neutral-700">Profile Views</p>
+                        <i data-lucide="eye" class="w-4 h-4 text-primary-600"></i>
+                    </div>
+                    <p class="text-3xl font-bold text-neutral-900 dark:text-neutral-50">24</p>
+                </div>
+                <div class="card space-y-2">
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm text-neutral-600 dark:text-neutral-700">Profile Score</p>
+                        <i data-lucide="star" class="w-4 h-4 text-warning"></i>
+                    </div>
+                    <p class="text-3xl font-bold text-neutral-900 dark:text-neutral-50">87%</p>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card space-y-4">
+                <h2 class="font-semibold text-neutral-900 dark:text-neutral-50">Recent Activity</h2>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between py-2 border-b border-neutral-200 dark:border-neutral-700">
+                        <div>
+                            <p class="font-medium text-neutral-900 dark:text-neutral-50">Applied to Senior Product Designer</p>
+                            <p class="text-xs text-neutral-600 dark:text-neutral-700">Google • 2 hours ago</p>
+                        </div>
+                        <span class="badge badge-success">Applied</span>
+                    </div>
+                    <div class="flex items-center justify-between py-2 border-b border-neutral-200 dark:border-neutral-700">
+                        <div>
+                            <p class="font-medium text-neutral-900 dark:text-neutral-50">Saved Full-Stack Engineer</p>
+                            <p class="text-xs text-neutral-600 dark:text-neutral-700">Microsoft • 1 day ago</p>
+                        </div>
+                        <span class="badge badge-primary">Saved</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== PROFILE TAB ===== -->
+        <section id="tab-profile" class="hidden space-y-6 animate-in">
+            <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-50">My Profile</h1>
+
+            <!-- Profile Header -->
+            <div class="card flex flex-col md:flex-row gap-6">
+                <img id="profileAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200" alt="Avatar" class="w-32 h-32 rounded-lg object-cover">
+                <div class="flex-1 space-y-3">
+                    <div>
+                        <h2 class="text-2xl font-bold text-neutral-900 dark:text-neutral-50" id="profileName">Aarav Patel</h2>
+                        <p class="text-neutral-600 dark:text-neutral-700" id="profileTitle">AI / ML Student</p>
+                    </div>
+                    <button onclick="switchTab('editProfile')" class="btn btn-primary w-fit">Edit Profile</button>
+                </div>
+            </div>
+
+            <!-- About -->
+            <div class="card space-y-3">
+                <h3 class="font-semibold text-neutral-900 dark:text-neutral-50">About</h3>
+                <p class="text-neutral-700 dark:text-neutral-800">Passionate about machine learning, data science, and building AI-powered solutions.</p>
+            </div>
+
+            <!-- Skills -->
+            <div class="card space-y-3">
+                <h3 class="font-semibold text-neutral-900 dark:text-neutral-50">Skills</h3>
+                <div class="flex flex-wrap gap-2" id="profileSkills">
+                    <span class="badge badge-primary">Python</span>
+                    <span class="badge badge-primary">Machine Learning</span>
+                    <span class="badge badge-primary">Data Science</span>
+                </div>
+            </div>
+
+            <!-- Resume -->
+            <div class="card space-y-3">
+                <h3 class="font-semibold text-neutral-900 dark:text-neutral-50">Resume</h3>
+                <div class="border-2 border-dashed border-neutral-200 dark:border-neutral-700 rounded-lg p-6 text-center">
+                    <i data-lucide="file-text" class="w-8 h-8 text-neutral-400 mx-auto mb-2"></i>
+                    <p class="text-sm text-neutral-600 dark:text-neutral-700">Click to upload or drag and drop</p>
+                    <input type="file" class="hidden" accept=".pdf">
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== RESUME BUILDER TAB ===== -->
+        <section id="tab-resume" class="hidden space-y-6 animate-in">
+            <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-50">Resume Builder</h1>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Form -->
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="card space-y-4">
+                        <h2 class="font-semibold text-neutral-900 dark:text-neutral-50">Personal Information</h2>
+                        <input type="text" placeholder="Full Name">
+                        <input type="email" placeholder="Email">
+                        <input type="tel" placeholder="Phone">
+                        <button class="btn btn-primary">Save Changes</button>
+                    </div>
+                </div>
+
+                <!-- Preview -->
+                <div class="card bg-neutral-50 dark:bg-neutral-300 min-h-96">
+                    <p class="text-center text-neutral-600 dark:text-neutral-700">Live Preview</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== INTERNSHIPS TAB ===== -->
+        <section id="tab-internships" class="hidden space-y-6 animate-in">
+            <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-50">Internship Opportunities</h1>
+            <div class="card space-y-4" id="internshipsContainer">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ===== EDIT PROFILE TAB ===== -->
+        <section id="tab-editProfile" class="hidden space-y-6 animate-in">
+            <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-50">Edit Profile</h1>
+            <form onsubmit="saveProfile(event)" class="card space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" placeholder="First Name" required>
+                    <input type="text" placeholder="Last Name" required>
+                </div>
+                <input type="email" placeholder="Email" required>
+                <input type="tel" placeholder="Phone" required>
+                <textarea placeholder="About Me" rows="4"></textarea>
+                <div class="flex gap-3">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="button" onclick="switchTab('profile')" class="btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- ===== APPLICATIONS TAB ===== -->
+        <section id="tab-applications" class="hidden space-y-6 animate-in">
+            <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-50">My Applications</h1>
+            <div class="space-y-4" id="applicationsContainer">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ===== SETTINGS TAB ===== -->
+        <section id="tab-settings" class="hidden space-y-6 animate-in">
+            <h1 class="text-3xl font-bold text-neutral-900 dark:text-neutral-50">Settings</h1>
+            <div class="card space-y-6">
+                <div class="flex items-center justify-between pb-4 border-b border-neutral-200 dark:border-neutral-700">
+                    <div>
+                        <h3 class="font-semibold text-neutral-900 dark:text-neutral-50">Dark Mode</h3>
+                        <p class="text-sm text-neutral-600 dark:text-neutral-700">Enable dark theme</p>
+                    </div>
+                    <button onclick="toggleTheme()" class="p-2 rounded-lg bg-primary-600 text-white">Toggle</button>
+                </div>
+                <div class="flex items-center justify-between pb-4 border-b border-neutral-200 dark:border-neutral-700">
+                    <div>
+                        <h3 class="font-semibold text-neutral-900 dark:text-neutral-50">Email Notifications</h3>
+                        <p class="text-sm text-neutral-600 dark:text-neutral-700">Get notified about new opportunities</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" class="sr-only peer" checked>
+                        <div class="relative w-11 h-6 bg-neutral-200 dark:bg-neutral-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                    </label>
+                </div>
             </div>
         </section>
 
     </main>
 
-    <!-- JOB DETAIL MODAL -->
-    <div id="jobDetailModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 my-8 max-h-[90vh] overflow-y-auto">
-            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-                <div class="flex items-center space-x-3">
-                    <img id="modalCompanyLogo" src="" alt="Company" class="w-12 h-12 rounded-xl object-cover border border-slate-200">
-                    <div>
-                        <h3 class="text-lg font-bold text-slate-900" id="modalJobTitle">Title</h3>
-                        <p class="text-xs text-slate-500" id="modalJobMeta">Company &bull; Location</p>
-                    </div>
-                </div>
-                <button type="button" onclick="closeJobDetailModal()" class="text-slate-400 hover:text-slate-600">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed bottom-4 right-4 z-50 space-y-3 pointer-events-none"></div>
 
-            <div class="space-y-6 pt-5">
-                <div class="bg-indigo-50/70 rounded-2xl p-5 border border-indigo-100">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <div class="flex items-center space-x-4">
-                            <div class="w-16 h-16 rounded-full border-4 flex items-center justify-center font-extrabold text-xl" id="modalMatchBadgeCircle">94%</div>
-                            <div>
-                                <span class="text-xs font-semibold px-2 py-0.5 rounded bg-indigo-100 text-indigo-800" id="modalMatchLevel">Exceptional Match</span>
-                                <p class="text-xs text-slate-600 mt-1" id="modalMatchReason">Matches core skills</p>
-                            </div>
-                        </div>
-                        <div class="text-xs text-slate-600 space-y-1">
-                            <div>Skill Overlap: <strong id="modalSkillScore">90%</strong></div>
-                            <div>Semantic Fit: <strong id="modalSemanticScore">85%</strong></div>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 pt-3 border-t border-indigo-100 space-y-2">
-                        <div>
-                            <span class="text-[11px] font-bold text-emerald-800 uppercase tracking-wider block mb-1">Your Matched Skills:</span>
-                            <div class="flex flex-wrap gap-1" id="modalMatchedSkills"></div>
-                        </div>
-                        <div id="modalMissingSkillsWrapper">
-                            <span class="text-[11px] font-bold text-amber-800 uppercase tracking-wider block mb-1">Skill Gaps to Learn:</span>
-                            <div class="flex flex-wrap gap-1" id="modalMissingSkills"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-3 text-sm text-slate-700">
-                    <h4 class="font-bold text-slate-900">Job Description</h4>
-                    <p id="modalJobDescription" class="leading-relaxed"></p>
-
-                    <h4 class="font-bold text-slate-900 pt-2">Key Responsibilities</h4>
-                    <ul id="modalJobResponsibilities" class="list-disc list-inside space-y-1 text-slate-600"></ul>
-
-                    <h4 class="font-bold text-slate-900 pt-2">Requirements</h4>
-                    <ul id="modalJobRequirements" class="list-disc list-inside space-y-1 text-slate-600"></ul>
-                </div>
-
-                <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <div id="modalApplyStatusText" class="text-xs text-slate-500">Clicking apply records your match score directly.</div>
-                    <button type="button" id="modalApplyBtn" onclick="handleModalApply()" class="w-full sm:w-auto px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg text-xs shadow-md transition flex items-center justify-center">
-                        <i data-lucide="send" class="w-4 h-4 mr-1.5"></i> One-Click Apply Now
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- POST NEW JOB MODAL -->
-    <div id="postJobModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 my-8">
-            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 class="text-base font-bold text-slate-900">Post New Job / Internship</h3>
-                <button type="button" onclick="closePostJobModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-            <form id="postJobForm" onsubmit="handlePostJobSubmit(event)" class="space-y-3 pt-3">
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Job Title *</label>
-                        <input type="text" id="newJobTitle" required placeholder="e.g. AI Research Intern" class="w-full p-2 border rounded-lg text-xs">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Company Name *</label>
-                        <input type="text" id="newJobCompany" required placeholder="e.g. Acme Tech" class="w-full p-2 border rounded-lg text-xs">
-                    </div>
-                </div>
-                <div class="grid grid-cols-3 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Location *</label>
-                        <input type="text" id="newJobLocation" required placeholder="San Francisco" class="w-full p-2 border rounded-lg text-xs">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Type</label>
-                        <select id="newJobType" class="w-full p-2 border rounded-lg text-xs">
-                            <option value="Internship">Internship</option>
-                            <option value="Full-time">Full-time</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Salary / Stipend</label>
-                        <input type="text" id="newJobSalary" required placeholder="$40/hr" class="w-full p-2 border rounded-lg text-xs">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-900 uppercase">Required Core Skills * (comma-separated)</label>
-                    <input type="text" id="newJobReqSkills" required placeholder="python, machine learning, sql" class="w-full p-2 border rounded-lg text-xs">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Job Description *</label>
-                    <textarea id="newJobDesc" rows="3" required placeholder="Describe the role..." class="w-full p-2 border rounded-lg text-xs"></textarea>
-                </div>
-                <div class="flex justify-end space-x-2 pt-2">
-                    <button type="button" onclick="closePostJobModal()" class="px-4 py-1.5 border rounded-lg text-xs">Cancel</button>
-                    <button type="submit" class="px-4 py-1.5 bg-indigo-600 text-white font-bold rounded-lg text-xs">Publish Job</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 mt-12 py-6 text-xs text-slate-500">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <span class="font-bold text-slate-700">MatchPortal</span> &bull; Full-Stack Career Ecosystem with AI Resume Builder & Quiz Practice
-            <div class="flex items-center space-x-3 text-slate-500">
-                <span>TF-IDF Vector Cosine Sim</span> &bull; <span>ATS Optimizer</span> &bull; <span>Verified Badges</span>
-            </div>
-        </div>
-    </footer>
-
-    <!-- SCRIPT LOGIC -->
     <script>
-        const INITIAL_CANDIDATES = [
-            {
-                id: 1,
-                name: "Aarav Patel",
-                email: "aarav.patel@example.com",
-                title: "Aspiring Machine Learning & Data Science Engineer",
-                education: "B.Tech in Computer Science, 2026",
-                preferred_type: "Internship",
-                experience_level: "Fresher / Student",
-                skills: ["python", "machine learning", "scikit-learn", "pandas", "numpy", "sql", "pytorch", "deep learning", "git"],
-                bio: "Passionate about predictive modeling, transformer networks, and data analytics pipelines.",
-                avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
-                verified: true
-            },
-            {
-                id: 2,
-                name: "Sophia Rodriguez",
-                email: "sophia.rodriguez@example.com",
-                title: "Frontend & React Developer",
-                education: "B.S. in Web Development, 2025",
-                preferred_type: "Full-time",
-                experience_level: "1-2 Years",
-                skills: ["javascript", "typescript", "react", "tailwind", "html", "css", "next.js", "git", "figma", "rest api"],
-                bio: "Creative frontend specialist with expertise in React 18, Tailwind CSS, TypeScript, and state management.",
-                avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150",
-                verified: false
-            },
-            {
-                id: 3,
-                name: "Marcus Vance",
-                email: "marcus.vance@example.com",
-                title: "Full-Stack Software Engineer",
-                education: "B.S. in Software Engineering, 2024",
-                preferred_type: "Any",
-                experience_level: "1-2 Years",
-                skills: ["python", "flask", "fastapi", "sql", "postgresql", "docker", "git", "rest api", "nodejs", "linux"],
-                bio: "Full-stack engineer experienced in building RESTful microservices with Python and Docker.",
-                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
-                verified: false
-            },
-            {
-                id: 4,
-                name: "Priya Sharma",
-                email: "priya.sharma@example.com",
-                title: "Product & UI/UX Designer",
-                education: "B.Des in Interaction Design, 2026",
-                preferred_type: "Internship",
-                experience_level: "Fresher / Student",
-                skills: ["figma", "ui/ux", "user research", "wireframing", "prototyping", "design systems", "html", "css"],
-                bio: "Human-centered designer skilled in Figma prototyping, user testing, and developer handoffs.",
-                avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150",
-                verified: false
+        lucide.createIcons();
+
+        // Theme Management
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                html.classList.add('dark');
+            } else {
+                html.classList.remove('dark');
             }
-        ];
-
-        const INITIAL_JOBS = [
-            {
-                id: 1,
-                title: "AI / Machine Learning Engineering Intern",
-                company: "NeuralScale AI",
-                logo: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=120",
-                location: "San Francisco, CA (or Remote)",
-                is_remote: true,
-                job_type: "Internship",
-                category: "Data & AI",
-                experience_level: "Fresher / Student",
-                salary: "$45 - $55 / hr",
-                required_skills: ["python", "machine learning", "scikit-learn", "pytorch", "pandas", "numpy"],
-                optional_skills: ["sql", "git", "docker"],
-                description: "Join our core AI research team to build and evaluate predictive models and recommendation algorithms.",
-                responsibilities: ["Develop and test ML models using PyTorch and Scikit-learn", "Clean and vectorize datasets", "Deploy inference APIs"],
-                requirements: ["Strong proficiency in Python", "Understanding of ML algorithms", "Experience with Pandas/NumPy"]
-            },
-            {
-                id: 2,
-                title: "Junior Data Scientist / Analyst",
-                company: "DataPulse Analytics",
-                logo: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=120",
-                location: "New York, NY (Hybrid)",
-                is_remote: false,
-                job_type: "Full-time",
-                category: "Data & AI",
-                experience_level: "Fresher / Student",
-                salary: "$80,000 - $95,000 / yr",
-                required_skills: ["python", "sql", "pandas", "scikit-learn", "data analysis"],
-                optional_skills: ["machine learning", "tableau", "git"],
-                description: "Translate complex user behavior data into actionable product and business insights.",
-                responsibilities: ["Write SQL queries to extract data", "Build predictive models in Python", "Create dashboards"],
-                requirements: ["Degree in CS, Statistics, or Math", "Proficiency in Python & SQL"]
-            },
-            {
-                id: 3,
-                title: "Frontend React Developer Intern",
-                company: "VividWeb Studio",
-                logo: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=120",
-                location: "Remote",
-                is_remote: true,
-                job_type: "Internship",
-                category: "Software Engineering",
-                experience_level: "Fresher / Student",
-                salary: "$30 - $40 / hr",
-                required_skills: ["react", "javascript", "tailwind", "html", "css"],
-                optional_skills: ["typescript", "next.js", "git", "figma"],
-                description: "Craft sleek, accessible user interfaces using modern React and Tailwind CSS.",
-                responsibilities: ["Implement Figma designs into React components", "Optimize web accessibility", "Integrate REST APIs"],
-                requirements: ["Solid fundamentals in JavaScript (ES6+), HTML, CSS", "Hands-on React experience"]
-            },
-            {
-                id: 4,
-                title: "Software Engineer - Frontend (React / TypeScript)",
-                company: "CloudSphere Systems",
-                logo: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=120",
-                location: "Austin, TX (Hybrid)",
-                is_remote: false,
-                job_type: "Full-time",
-                category: "Software Engineering",
-                experience_level: "1-2 Years",
-                salary: "$95,000 - $115,000 / yr",
-                required_skills: ["react", "typescript", "javascript", "tailwind", "rest api"],
-                optional_skills: ["next.js", "git", "docker"],
-                description: "Build real-time enterprise dashboards used by thousands of IT teams worldwide.",
-                responsibilities: ["Architect modular React components", "Maintain TypeScript typings", "Write unit tests"],
-                requirements: ["1+ years production experience with React and TypeScript"]
-            },
-            {
-                id: 5,
-                title: "Full-Stack Python & React Engineer",
-                company: "OmniFlow Technologies",
-                logo: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=120",
-                location: "Remote (Global)",
-                is_remote: true,
-                job_type: "Full-time",
-                category: "Software Engineering",
-                experience_level: "1-2 Years",
-                salary: "$100,000 - $125,000 / yr",
-                required_skills: ["python", "react", "fastapi", "sql", "postgresql"],
-                optional_skills: ["docker", "git", "rest api", "tailwind"],
-                description: "Build high-throughput Python REST endpoints and polished React client frontends.",
-                responsibilities: ["Design RESTful services with FastAPI/Flask", "Model PostgreSQL schemas", "Collaborate on frontend"],
-                requirements: ["Hands-on Python web frameworks", "Experience with React and Docker"]
-            },
-            {
-                id: 6,
-                title: "Backend Python Developer Intern",
-                company: "DataGrid Labs",
-                logo: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=120",
-                location: "Seattle, WA (or Remote)",
-                is_remote: true,
-                job_type: "Internship",
-                category: "Software Engineering",
-                experience_level: "Fresher / Student",
-                salary: "$35 - $45 / hr",
-                required_skills: ["python", "flask", "sql", "rest api", "git"],
-                optional_skills: ["docker", "postgresql", "linux"],
-                description: "Work with systems architects to build scalable APIs and database migrations.",
-                responsibilities: ["Write clean Python backend code", "Optimize SQL queries", "Write endpoint docs"],
-                requirements: ["Strong grasp of Python algorithms and relational databases"]
-            },
-            {
-                id: 7,
-                title: "Product & UI/UX Design Intern",
-                company: "Aura Creative Labs",
-                logo: "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=120",
-                location: "Remote",
-                is_remote: true,
-                job_type: "Internship",
-                category: "UI/UX Design",
-                experience_level: "Fresher / Student",
-                salary: "$28 - $36 / hr",
-                required_skills: ["figma", "ui/ux", "wireframing", "prototyping", "user research"],
-                optional_skills: ["design systems", "html", "css"],
-                description: "Turn complex workflows into clean, intuitive, and delightful user experiences in Figma.",
-                responsibilities: ["Conduct user research interviews", "Create clickable prototypes in Figma", "Contribute to design system"],
-                requirements: ["Demonstrated portfolio of design projects", "Strong typography & layout skills"]
-            },
-            {
-                id: 8,
-                title: "DevOps & Cloud Engineering Intern",
-                company: "InfraCloud Automation",
-                logo: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=120",
-                location: "Chicago, IL (Hybrid)",
-                is_remote: false,
-                job_type: "Internship",
-                category: "DevOps & Cloud",
-                experience_level: "Fresher / Student",
-                salary: "$32 - $42 / hr",
-                required_skills: ["docker", "linux", "git", "python", "cicd"],
-                optional_skills: ["kubernetes", "aws", "bash"],
-                description: "Automate container builds and CI/CD pipelines to keep cloud systems online.",
-                responsibilities: ["Maintain Docker configurations", "Write Python automation scripts", "Setup GitHub Actions"],
-                requirements: ["Linux CLI familiarity", "Understanding of Docker containers and Git"]
-            }
-        ];
-
-        // QUIZ QUESTIONS DATA
-        const QUIZ_DATA = {
-            ai: [
-                {
-                    q: "What is the primary objective of gradient descent in machine learning?",
-                    options: [
-                        "To minimize the loss function by iteratively updating model weights",
-                        "To clean and preprocess missing values in the dataset",
-                        "To normalize features into a standard normal distribution",
-                        "To randomly split dataset into training and testing subsets"
-                    ],
-                    answer: 0,
-                    explanation: "Gradient descent calculates the gradient of the loss function with respect to model parameters and steps in the opposite direction to minimize error."
-                },
-                {
-                    q: "Which technique is specifically used to prevent overfitting in deep neural networks?",
-                    options: ["Batch Normalization", "Dropout", "Learning Rate Warmup", "Softmax activation"],
-                    answer: 1,
-                    explanation: "Dropout randomly deactivates a subset of neurons during training, preventing co-adaptation and reducing overfitting."
-                },
-                {
-                    q: "In Natural Language Processing, what does TF-IDF measure?",
-                    options: [
-                        "The time complexity of training an NLP transformer model",
-                        "The importance of a word in a document relative to an entire corpus",
-                        "The gradient magnitude of an attention head",
-                        "The accuracy of text speech-to-text transcription"
-                    ],
-                    answer: 1,
-                    explanation: "TF-IDF balances term frequency with inverse document frequency so common words like 'the' are downweighted while distinctive domain words are emphasized."
-                },
-                {
-                    q: "What is the key difference between supervised and unsupervised learning?",
-                    options: [
-                        "Supervised learning requires labeled ground-truth targets, while unsupervised finds latent patterns in unlabeled data",
-                        "Supervised learning only works on images, while unsupervised works on text",
-                        "Supervised models never use gradient descent",
-                        "Unsupervised learning always produces 100% accurate predictions"
-                    ],
-                    answer: 0,
-                    explanation: "Supervised models learn a mapping function from input X to ground-truth label Y. Unsupervised models discover clusters and distributions without labels."
-                },
-                {
-                    q: "Why is Cosine Similarity preferred over Euclidean distance when comparing text embeddings?",
-                    options: [
-                        "Cosine similarity measures the angular orientation regardless of document length/magnitude",
-                        "Euclidean distance cannot be computed on floating point numbers",
-                        "Cosine similarity is always negative",
-                        "Cosine similarity does not require vector dot products"
-                    ],
-                    answer: 0,
-                    explanation: "Cosine similarity evaluates the direction of vectors rather than their length, making it ideal for text where short and long documents can discuss identical topics."
-                }
-            ],
-            react: [
-                {
-                    q: "Why should you never mutate state directly in React (e.g. state.count = 5)?",
-                    options: [
-                        "React checks object references; mutating directly prevents re-renders and breaks component lifecycle",
-                        "Direct mutation crashes the browser JavaScript engine",
-                        "React state is stored in localStorage permanently",
-                        "Direct mutation only works with class components"
-                    ],
-                    answer: 0,
-                    explanation: "React relies on immutable state updates to detect changes via shallow reference equality before scheduling DOM reconciliation."
-                },
-                {
-                    q: "What is the purpose of the dependency array in the useEffect hook?",
-                    options: [
-                        "To specify which state/props trigger the effect when their values change",
-                        "To list external npm libraries needed by the component",
-                        "To declare HTML CSS classes for styling",
-                        "To bind keyboard shortcuts to the window"
-                    ],
-                    answer: 0,
-                    explanation: "When values in the dependency array change between renders, React runs the effect. An empty array `[]` runs it only once on mount."
-                },
-                {
-                    q: "What problem does React's Virtual DOM solve?",
-                    options: [
-                        "It minimizes expensive direct updates to the real browser DOM by computing efficient diffs",
-                        "It replaces CSS with JavaScript canvas rendering",
-                        "It bypasses JavaScript runtime security checks",
-                        "It caches API network responses automatically"
-                    ],
-                    answer: 0,
-                    explanation: "Direct DOM manipulation is slow. The Virtual DOM maintains a lightweight in-memory representation and calculates optimal patch operations."
-                },
-                {
-                    q: "In React, why must list items have a unique 'key' prop?",
-                    options: [
-                        "Keys help React identify which items have changed, been added, or removed during reconciliation",
-                        "Keys are required by CSS grid layouts",
-                        "Keys encrypt the data sent across WebSockets",
-                        "Keys prevent JavaScript garbage collection"
-                    ],
-                    answer: 0,
-                    explanation: "Keys provide stable identities to list elements across renders so React can reorder existing DOM nodes rather than recreating them."
-                },
-                {
-                    q: "What does useMemo() do in a functional React component?",
-                    options: [
-                        "Memoizes the computed result of an expensive calculation between renders",
-                        "Stores variables in IndexedDB permanently",
-                        "Prevents parent components from ever re-rendering",
-                        "Executes asynchronous HTTP requests"
-                    ],
-                    answer: 0,
-                    explanation: "useMemo caches the returned value of a function and only recalculates it when its declared dependencies change."
-                }
-            ],
-            fullstack: [
-                {
-                    q: "What makes an HTTP method 'Idempotent'?",
-                    options: [
-                        "Making multiple identical requests produces the exact same server state as a single request (e.g. GET, PUT, DELETE)",
-                        "The method automatically encrypts payloads with SSL",
-                        "The method can only be called once every 60 seconds",
-                        "The method returns binary data instead of JSON"
-                    ],
-                    answer: 0,
-                    explanation: "Idempotent HTTP methods (like GET, PUT, DELETE) guarantee that repeating the request multiple times results in the same outcome on the server."
-                },
-                {
-                    q: "What is the primary role of Docker in full-stack software development?",
-                    options: [
-                        "Packages an application and its entire runtime dependencies into a standardized, isolated container",
-                        "Replaces SQL database tables with JSON files",
-                        "Minifies client-side CSS and JavaScript bundles",
-                        "Compiles Python code into machine binary code"
-                    ],
-                    answer: 0,
-                    explanation: "Docker eliminates the 'it works on my machine' issue by bundling application code, system libraries, and configs into reproducible containers."
-                },
-                {
-                    q: "What does the Python GIL (Global Interpreter Lock) enforce?",
-                    options: [
-                        "Only one native thread can execute Python bytecode at a time in CPython",
-                        "It prevents unauthorized users from inspecting source files",
-                        "It prevents memory leaks by deleting unreferenced objects",
-                        "It locks database records during ACID transactions"
-                    ],
-                    answer: 0,
-                    explanation: "The GIL protects CPython's memory management from race conditions by allowing only one thread to execute Python bytecode at any moment."
-                },
-                {
-                    q: "Why are database indexes used in relational databases like PostgreSQL/MySQL?",
-                    options: [
-                        "They speed up SELECT query search retrieval by creating ordered B-Tree lookup data structures",
-                        "They compress table storage by 90%",
-                        "They automatically translate SQL into GraphQL",
-                        "They encrypt customer passwords in storage"
-                    ],
-                    answer: 0,
-                    explanation: "Without an index, the database must perform a full table scan. Indexes (typically B-Trees) enable logarithmic O(log N) lookup times."
-                },
-                {
-                    q: "What is the difference between Authentication (AuthN) and Authorization (AuthZ)?",
-                    options: [
-                        "AuthN verifies who you are; AuthZ determines what permissions and resources you are allowed to access",
-                        "AuthN is handled by the browser; AuthZ is handled by the operating system",
-                        "AuthN only applies to mobile devices; AuthZ applies to desktop browsers",
-                        "AuthN and AuthZ are identical terms with no difference"
-                    ],
-                    answer: 0,
-                    explanation: "Authentication proves your identity (e.g. Login with email & password). Authorization checks if your identity has permission to perform an action (e.g. Admin access)."
-                }
-            ],
-            sql: [
-                {
-                    q: "What is the difference between WHERE and HAVING in SQL?",
-                    options: [
-                        "WHERE filters individual rows before grouping; HAVING filters aggregated groups created by GROUP BY",
-                        "WHERE only works with numbers; HAVING only works with strings",
-                        "HAVING can only be used with subqueries",
-                        "WHERE is slower than HAVING in all database engines"
-                    ],
-                    answer: 0,
-                    explanation: "WHERE applies row-level predicates before any aggregation. HAVING filters the result of aggregate functions (e.g. HAVING COUNT(*) > 5) after GROUP BY."
-                },
-                {
-                    q: "What does an INNER JOIN return?",
-                    options: [
-                        "Only rows that have matching values in both joined tables",
-                        "All rows from the left table and only matching rows from the right",
-                        "All rows from both tables regardless of match",
-                        "A random sample of rows from both tables"
-                    ],
-                    answer: 0,
-                    explanation: "INNER JOIN selects records that have matching keys in both participating tables, discarding non-matching rows from either side."
-                },
-                {
-                    q: "What do the ACID properties in database transactions guarantee?",
-                    options: [
-                        "Atomicity, Consistency, Isolation, and Durability",
-                        "Accuracy, Compression, Indexing, and Delegation",
-                        "Asynchronous, Concurrent, Interleaved, and Distributed",
-                        "Audit, Credentials, Integrity, and Documentation"
-                    ],
-                    answer: 0,
-                    explanation: "ACID ensures reliable transaction processing: Atomicity (all-or-nothing), Consistency (rules maintained), Isolation (independent transactions), and Durability (persisted)."
-                },
-                {
-                    q: "In Data Science, what is the p-value?",
-                    options: [
-                        "The probability of observing results at least as extreme as measured, assuming the null hypothesis is true",
-                        "The percentage of missing rows in a dataset",
-                        "The learning rate hyperparameter in neural networks",
-                        "The total number of parameters in a linear regression"
-                    ],
-                    answer: 0,
-                    explanation: "A small p-value (typically < 0.05) indicates strong evidence against the null hypothesis, so you reject the null."
-                },
-                {
-                    q: "What is the Bias-Variance tradeoff in predictive modeling?",
-                    options: [
-                        "High bias leads to underfitting; High variance leads to overfitting on training noise",
-                        "Bias refers to database query latency; Variance refers to network ping",
-                        "Bias occurs only in unsupervised models; Variance occurs only in supervised models",
-                        "Minimizing bias always automatically eliminates variance"
-                    ],
-                    answer: 0,
-                    explanation: "A model with high bias is overly simplistic (underfitting). A model with high variance is overly complex and memorizes noise (overfitting)."
-                }
-            ]
-        };
-
-        // VOCABULARY FLASHCARDS DATA
-        const VOCAB_DATA = [
-            {
-                term: "Cosine Similarity",
-                category: "AI / ML",
-                def: "A mathematical metric that measures the cosine of the angle between two multi-dimensional vectors. It determines whether two documents or text embeddings point in roughly the same direction, regardless of magnitude.",
-                analogy: "Think of two books: one is a 5-page summary of quantum physics, the other is a 500-page textbook on the same topic. Their vector lengths differ greatly, but their angle is nearly zero!"
-            },
-            {
-                term: "TF-IDF (Term Frequency - Inverse Document Frequency)",
-                category: "AI / ML",
-                def: "A numerical statistic that reflects how important a word is to a document in a collection. Words that appear frequently in one document but rarely across the whole corpus receive high importance scores.",
-                analogy: "The word 'the' appears everywhere, so IDF penalizes it. The word 'PyTorch' appears only in deep learning resumes, so it receives a high TF-IDF signal."
-            },
-            {
-                term: "Virtual DOM & Reconciliation",
-                category: "Frontend",
-                def: "React creates a lightweight in-memory representation of the actual browser DOM. When component state changes, React diffs the previous and new Virtual DOM trees and performs minimal batches of real DOM mutations.",
-                analogy: "Like editing a blueprint on paper first before remodeling a house, so you only knock down the exact walls that changed rather than rebuilding the entire structure."
-            },
-            {
-                term: "REST API & Idempotency",
-                category: "Backend",
-                def: "An architectural style where resources are represented by URIs and manipulated using standard HTTP verbs (GET, POST, PUT, DELETE). Idempotent methods (PUT, DELETE) produce the exact same server state even if repeated.",
-                analogy: "Pressing the 'Power Off' button on a TV: no matter how many times you press it, the TV remains off."
-            },
-            {
-                term: "Docker & Containerization",
-                category: "Backend",
-                def: "An OS-level virtualization technology that bundles code, runtime, system tools, and libraries into an isolated container image that runs identically on developer laptops, test servers, and cloud clusters.",
-                analogy: "Standardized shipping containers: shipping companies don't care what is inside; they can stack and move any container anywhere seamlessly."
-            },
-            {
-                term: "Relational Database Indexing (B-Tree)",
-                category: "Backend",
-                def: "A balanced tree data structure maintained on table columns that allows the database engine to find specific rows in logarithmic O(log N) time rather than scanning every single row in the table.",
-                analogy: "Like the alphabetical index at the back of a 1,000-page textbook, allowing you to instantly jump to the exact page without reading from page 1."
-            },
-            {
-                term: "State Immutability in React",
-                category: "Frontend",
-                def: "Treating state objects as read-only. Instead of modifying an array with push(), you create a copy with the spread operator [...items, newItem]. This enables React to perform fast shallow equality checks (===).",
-                analogy: "Taking a new photograph when your hair changes, rather than drawing a mustache directly on top of the original physical photo."
-            },
-            {
-                term: "Cross-Origin Resource Sharing (CORS)",
-                category: "Backend",
-                def: "A browser security mechanism that restricts HTTP requests made by JavaScript from one origin domain to another, unless the server explicitly sends headers like 'Access-Control-Allow-Origin: *'.",
-                analogy: "A security guard at a building lobby checking your guest badge before letting you enter an office that isn't your own."
-            },
-            {
-                term: "Overfitting vs Underfitting",
-                category: "AI / ML",
-                def: "Overfitting happens when an ML model memorizes the training data noise and fails to generalize to unseen test data. Underfitting occurs when a model is too simplistic to capture the underlying pattern.",
-                analogy: "Overfitting is memorizing the exact answers to last year's exam; Underfitting is only studying the chapter titles and guessing everything."
-            },
-            {
-                term: "Design Tokens & Design Systems",
-                category: "Frontend",
-                def: "The visual design atoms of a product design system (colors, typography scales, spacing units, border radii) stored as platform-agnostic variables that stay synchronized between Figma and CSS.",
-                analogy: "Like standardized LEGO brick dimensions: every brick fits perfectly whether you're building a castle in Figma or rendering it in Tailwind."
-            },
-            {
-                term: "JWT (JSON Web Token)",
-                category: "Backend",
-                def: "A compact, self-contained URL-safe standard used for securely transmitting claims between parties as a JSON object, signed with a secret key or public/private key pair.",
-                analogy: "A stamped hand-wristband at a concert: the bouncers can verify the stamp's authenticity without checking a master database every time you re-enter."
-            },
-            {
-                term: "Jaccard Skill Overlap",
-                category: "AI / ML",
-                def: "A similarity coefficient calculated as the size of the intersection divided by the size of the union of two sample sets. Used to compute normalized skill match between candidates and job descriptions.",
-                analogy: "Comparing two shopping carts: how many items are in both carts divided by the total unique items in both carts combined."
-            }
-        ];
-
-        // State initialization
-        let candidates = JSON.parse(localStorage.getItem('portal_candidates')) || INITIAL_CANDIDATES;
-        let jobs = JSON.parse(localStorage.getItem('portal_jobs')) || INITIAL_JOBS;
-        let applications = JSON.parse(localStorage.getItem('portal_applications')) || [
-            { id: 1, job_id: 1, candidate_id: 1, match_score: 94, status: "Shortlisted", date: "2026-09-28" },
-            { id: 2, job_id: 2, candidate_id: 1, match_score: 82, status: "Under Review", date: "2026-09-29" },
-            { id: 3, job_id: 3, candidate_id: 2, match_score: 91, status: "Interviewing", date: "2026-09-30" }
-        ];
-        let savedJobIds = new Set(JSON.parse(localStorage.getItem('portal_saved')) || [1]);
-        let activeCandidateId = parseInt(localStorage.getItem('portal_active_candidate') || "1");
-
-        // Filter state
-        let currentFilterType = "All";
-        let currentMinMatch = 0;
-        let selectedJobForModal = null;
-
-        // Quiz state
-        let currentQuizTrack = "ai";
-        let currentQuizIndex = 0;
-        let quizScore = 0;
-        let quizAnswered = false;
-
-        // Vocab state
-        let currentVocabFilter = "All";
-        let filteredVocabList = [...VOCAB_DATA];
-        let currentVocabIndex = 0;
-        let isCardFlipped = false;
-        let masteredVocabSet = new Set(JSON.parse(localStorage.getItem('portal_mastered_vocab')) || []);
-
-        // Resume state
-        let currentResumeTheme = "modern";
-
-        // Skill Synonyms Map
-        const SYNONYMS = {
-            "react.js": "react", "reactjs": "react", "node.js": "nodejs", "node": "nodejs",
-            "js": "javascript", "ts": "typescript", "py": "python", "k8s": "kubernetes",
-            "postgres": "postgresql", "mongo": "mongodb", "ml": "machine learning", "ai": "machine learning"
-        };
-
-        function normSkill(s) {
-            if (!s) return "";
-            const clean = s.trim().toLowerCase();
-            return SYNONYMS[clean] || clean;
         }
 
-        // ==============================================================
-        // AI RECOMMENDATION ALGORITHM (Client-Side)
-        // ==============================================================
-        function calculateMatch(candidate, job) {
-            const candSkills = new Set((candidate.skills || []).map(normSkill));
-            const reqSkills = new Set((job.required_skills || []).map(normSkill));
-            const optSkills = new Set((job.optional_skills || []).map(normSkill));
-
-            const matchedReq = [...reqSkills].filter(s => candSkills.has(s));
-            const missingReq = [...reqSkills].filter(s => !candSkills.has(s));
-            const matchedOpt = [...optSkills].filter(s => candSkills.has(s));
-
-            const reqRatio = reqSkills.size ? (matchedReq.length / reqSkills.size) : 1.0;
-            const optRatio = optSkills.size ? (matchedOpt.length / optSkills.size) : 0.5;
-            const skillScore = (reqRatio * 0.8 + optRatio * 0.2) * 100;
-
-            const candText = `${candidate.title} ${candidate.bio} ${candidate.skills.join(' ')}`.toLowerCase();
-            const jobText = `${job.title} ${job.description} ${job.required_skills.join(' ')}`.toLowerCase();
-            const wordsCand = candText.match(/\b[a-z]{3,}\b/g) || [];
-            const wordsJob = jobText.match(/\b[a-z]{3,}\b/g) || [];
-            const commonWords = wordsCand.filter(w => wordsJob.includes(w));
-            const semanticScore = Math.min(100, (commonWords.length / Math.max(1, Math.sqrt(wordsCand.length * wordsJob.length))) * 180);
-
-            let prefScore = 70;
-            if (candidate.preferred_type && job.job_type) {
-                if (candidate.preferred_type.toLowerCase() === job.job_type.toLowerCase() || candidate.preferred_type === 'Any') prefScore += 20;
-            }
-            if (candidate.experience_level && job.experience_level) {
-                if (candidate.experience_level === job.experience_level) prefScore += 10;
-            }
-            if (candidate.verified) prefScore = Math.min(100, prefScore + 10);
-            prefScore = Math.min(100, prefScore);
-
-            const finalPct = Math.round(Math.min(99, Math.max(8, (skillScore * 0.55) + (semanticScore * 0.30) + (prefScore * 0.15))));
-
-            let level = "Potential Match", color = "slate";
-            if (finalPct >= 85) { level = "Exceptional Match"; color = "emerald"; }
-            else if (finalPct >= 70) { level = "Strong Match"; color = "blue"; }
-            else if (finalPct >= 50) { level = "Good Match"; color = "amber"; }
-
-            const reason = reqSkills.size 
-                ? `Matches ${matchedReq.length} of ${reqSkills.size} core required skills (${matchedReq.slice(0, 3).join(', ')}).`
-                : `Profile keywords closely align with the role description.`;
-
-            return {
-                percentage: finalPct,
-                skillScore: Math.round(skillScore),
-                semanticScore: Math.round(semanticScore),
-                matchedSkills: [...matchedReq, ...matchedOpt],
-                missingSkills: missingReq,
-                level: level,
-                color: color,
-                reason: reason
-            };
+        function toggleTheme() {
+            html.classList.toggle('dark');
+            const isDark = html.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            lucide.createIcons();
         }
 
-        function getCurrentCandidate() {
-            return candidates.find(c => c.id === activeCandidateId) || candidates[0];
-        }
-
-        function switchCandidate(id) {
-            activeCandidateId = parseInt(id);
-            localStorage.setItem('portal_active_candidate', activeCandidateId);
-            updateUI();
-            if (!document.getElementById('tab-resume').classList.contains('hidden')) generateAIResume();
-            showToast(`Switched profile to ${getCurrentCandidate().name}`);
-        }
-
+        // Navigation
         function switchTab(tabName) {
-            ['jobs', 'resume', 'quiz', 'vocabulary', 'applications', 'profile', 'recruiter'].forEach(t => {
-                document.getElementById(`tab-${t}`).classList.add('hidden');
-                const btn = document.getElementById(`nav-${t}`);
-                if (btn) {
-                    btn.classList.remove('text-indigo-600', 'bg-indigo-50/80', 'font-semibold');
-                    btn.classList.add('text-slate-600');
-                }
+            document.querySelectorAll('section[id^="tab-"]').forEach(tab => {
+                tab.classList.add('hidden');
             });
-            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-            const activeBtn = document.getElementById(`nav-${tabName}`);
-            if (activeBtn) {
-                activeBtn.classList.remove('text-slate-600');
-                activeBtn.classList.add('text-indigo-600', 'bg-indigo-50/80', 'font-semibold');
-            }
-
-            if (tabName === 'resume') generateAIResume();
-            if (tabName === 'quiz') startQuizTrack(currentQuizTrack);
-            if (tabName === 'vocabulary') initVocab();
-            if (tabName === 'applications') renderApplications();
-            if (tabName === 'profile') renderProfileForm();
-            if (tabName === 'recruiter') renderRecruiterView();
-            lucide.createIcons();
-        }
-
-        function updateUI() {
-            const cand = getCurrentCandidate();
-            document.getElementById('currentUserName').innerText = cand.name;
-            document.getElementById('currentUserTitle').innerText = cand.title;
-            document.getElementById('navName').innerText = cand.name;
-            document.getElementById('navRole').innerText = `${cand.preferred_type} Seeker`;
-            document.getElementById('navAvatar').src = cand.avatar;
-            document.getElementById('heroUserName').innerText = cand.name.split(' ')[0];
-            document.getElementById('profileSelect').value = cand.id;
-
-            const heroSkills = document.getElementById('heroSkillsList');
-            heroSkills.innerHTML = cand.skills.map(s => `
-                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-white/10 text-indigo-100 border border-white/10">
-                    ${s}
-                </span>
-            `).join('');
-
-            const userApps = applications.filter(a => a.candidate_id === cand.id);
-            document.getElementById('appCountNav').innerText = userApps.length;
-
-            renderJobs();
-        }
-
-        // ==============================================================
-        // FIND JOBS TAB LOGIC
-        // ==============================================================
-        function renderJobs() {
-            const cand = getCurrentCandidate();
-            const query = (document.getElementById('searchInput').value || "").toLowerCase().trim();
-            const remoteOnly = document.getElementById('remoteOnlyToggle').checked;
-
-            let scored = jobs.map(j => ({ ...j, match: calculateMatch(cand, j) }));
-
-            if (currentFilterType !== "All") scored = scored.filter(j => j.job_type.toLowerCase() === currentFilterType.toLowerCase());
-            if (currentMinMatch > 0) scored = scored.filter(j => j.match.percentage >= currentMinMatch);
-            if (remoteOnly) scored = scored.filter(j => j.is_remote);
-            if (query) {
-                scored = scored.filter(j => `${j.title} ${j.company} ${j.description} ${j.required_skills.join(' ')}`.toLowerCase().includes(query));
-            }
-
-            scored.sort((a, b) => b.match.percentage - a.match.percentage);
-            document.getElementById('jobCountBadge').innerText = `Showing ${scored.length} of ${jobs.length} positions`;
-
-            const topPicksContainer = document.getElementById('topPicksContainer');
-            const topPicksSection = document.getElementById('topPicksSection');
-            const topPicks = scored.filter(j => j.match.percentage >= 70).slice(0, 3);
-
-            if (topPicks.length && !query && currentFilterType === "All" && currentMinMatch === 0) {
-                topPicksSection.classList.remove('hidden');
-                topPicksContainer.innerHTML = topPicks.map(job => `
-                    <div class="bg-white rounded-xl p-5 border border-indigo-100 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-3">
-                                <div class="flex items-center space-x-3">
-                                    <img src="${job.logo}" alt="${job.company}" class="w-10 h-10 rounded-lg object-cover border border-slate-200">
-                                    <div>
-                                        <h3 class="font-bold text-slate-900 text-sm hover:text-indigo-600 cursor-pointer" onclick="openJobDetailModal(${job.id})">${job.title}</h3>
-                                        <p class="text-xs text-slate-500">${job.company}</p>
-                                    </div>
-                                </div>
-                                <span class="px-2.5 py-1 rounded-full text-xs font-bold ${job.match.percentage >= 85 ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'}">
-                                    ${job.match.percentage}% Match
-                                </span>
-                            </div>
-                            <div class="bg-slate-50 rounded-lg p-2.5 mb-3 text-xs text-slate-600">
-                                <i data-lucide="info" class="w-3.5 h-3.5 inline text-indigo-500 mr-1"></i> ${job.match.reason}
-                            </div>
-                        </div>
-                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                            <span class="font-semibold text-slate-700">${job.salary}</span>
-                            <button onclick="openJobDetailModal(${job.id})" class="font-semibold text-indigo-600 hover:text-indigo-800 flex items-center">
-                                View Match &rarr;
-                            </button>
-                        </div>
-                    </div>
-                `).join('');
-            } else {
-                topPicksSection.classList.add('hidden');
-            }
-
-            const jobsContainer = document.getElementById('jobsListContainer');
-            if (scored.length === 0) {
-                jobsContainer.innerHTML = `
-                    <div class="bg-white rounded-2xl p-12 text-center border border-slate-200">
-                        <i data-lucide="search-x" class="w-12 h-12 text-slate-300 mx-auto mb-3"></i>
-                        <h3 class="text-base font-bold text-slate-800">No jobs match your current filters</h3>
-                        <p class="text-xs text-slate-500 mt-1">Try resetting the match percentage or clearing search keywords.</p>
-                    </div>
-                `;
-            } else {
-                jobsContainer.innerHTML = scored.map(job => {
-                    const isSaved = savedJobIds.has(job.id);
-                    return `
-                    <div class="bg-white rounded-xl p-5 sm:p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all hover:border-indigo-300">
-                        <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
-                            <div class="flex items-start space-x-4 flex-1">
-                                <img src="${job.logo}" alt="${job.company}" class="w-12 h-12 rounded-xl object-cover border border-slate-200 flex-shrink-0">
-                                <div class="space-y-1.5 flex-1">
-                                    <div class="flex flex-wrap items-center gap-2">
-                                        <h3 class="text-base sm:text-lg font-bold text-slate-900 hover:text-indigo-600 cursor-pointer" onclick="openJobDetailModal(${job.id})">${job.title}</h3>
-                                        <span class="px-2 py-0.5 rounded text-xs font-medium ${job.job_type === 'Internship' ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-blue-50 text-blue-700 border border-blue-200'}">${job.job_type}</span>
-                                        ${job.is_remote ? '<span class="px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">Remote</span>' : ''}
-                                    </div>
-                                    <p class="text-xs sm:text-sm text-slate-600 flex flex-wrap items-center gap-x-3 gap-y-1">
-                                        <span class="font-medium text-slate-800">${job.company}</span> &bull;
-                                        <span>${job.location}</span> &bull;
-                                        <span class="font-semibold text-emerald-700">${job.salary}</span>
-                                    </p>
-                                    <div class="p-2.5 rounded-lg bg-indigo-50/60 border border-indigo-100 text-xs text-indigo-900 mt-2">
-                                        <strong>Why Recommended:</strong> ${job.match.reason}
-                                    </div>
-                                    <div class="pt-2 flex flex-wrap items-center gap-1.5">
-                                        <span class="text-[11px] font-semibold text-slate-400 mr-1">Skills:</span>
-                                        ${job.match.matchedSkills.map(s => `
-                                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">&check; ${s}</span>
-                                        `).join('')}
-                                        ${job.match.missingSkills.map(s => `
-                                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200 border-dashed">+ Need ${s}</span>
-                                        `).join('')}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex md:flex-col items-center md:items-end justify-between md:justify-start gap-3 border-t md:border-t-0 pt-3 md:pt-0 border-slate-100 flex-shrink-0">
-                                <div class="text-right">
-                                    <div class="inline-flex items-center px-3 py-1.5 rounded-xl font-bold text-sm ${job.match.percentage >= 85 ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : job.match.percentage >= 70 ? 'bg-blue-100 text-blue-800 border border-blue-300' : 'bg-amber-100 text-amber-800 border border-amber-300'}">
-                                        <span class="text-base font-extrabold mr-1">${job.match.percentage}%</span> Match
-                                    </div>
-                                    <p class="text-[11px] text-slate-500 mt-1 font-medium">${job.match.level}</p>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <button onclick="toggleBookmark(${job.id})" class="p-2 rounded-lg border transition ${isSaved ? 'text-rose-500 bg-rose-50 border-rose-200' : 'text-slate-400 border-slate-200 hover:bg-slate-50'}">
-                                        <i data-lucide="bookmark" class="w-4 h-4 ${isSaved ? 'fill-current' : ''}"></i>
-                                    </button>
-                                    <button onclick="openJobDetailModal(${job.id})" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-xs transition">
-                                        View & Apply &rarr;
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    `;
-                }).join('');
-            }
-            lucide.createIcons();
-        }
-
-        function setFilterType(type) {
-            currentFilterType = type;
-            document.querySelectorAll('.filter-type-btn').forEach(b => {
-                b.className = b.dataset.type === type 
-                    ? 'filter-type-btn px-2.5 py-1 rounded-md font-medium transition bg-indigo-600 text-white'
-                    : 'filter-type-btn px-2.5 py-1 rounded-md font-medium transition bg-slate-100 text-slate-600 hover:bg-slate-200';
-            });
-            renderJobs();
-        }
-
-        function setMinMatch(score) {
-            currentMinMatch = score;
-            document.querySelectorAll('.filter-match-btn').forEach(b => {
-                b.className = parseInt(b.dataset.match) === score 
-                    ? 'filter-match-btn px-2.5 py-1 rounded-md font-medium transition bg-emerald-600 text-white'
-                    : 'filter-match-btn px-2.5 py-1 rounded-md font-medium transition bg-slate-100 text-slate-600 hover:bg-slate-200';
-            });
-            renderJobs();
-        }
-
-        function resetFilters() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('remoteOnlyToggle').checked = false;
-            setFilterType('All');
-            setMinMatch(0);
-        }
-
-        function toggleBookmark(jobId) {
-            if (savedJobIds.has(jobId)) {
-                savedJobIds.delete(jobId);
-                showToast("Job removed from bookmarks.");
-            } else {
-                savedJobIds.add(jobId);
-                showToast("Job saved to bookmarks!");
-            }
-            localStorage.setItem('portal_saved', JSON.stringify([...savedJobIds]));
-            renderJobs();
-        }
-
-        // ==============================================================
-        // AI RESUME BUILDER & ATS SCANNER (NEW!)
-        // ==============================================================
-        function setResumeTheme(theme) {
-            currentResumeTheme = theme;
-            document.querySelectorAll('.resume-theme-btn').forEach(b => {
-                if (b.dataset.theme === theme) {
-                    b.className = "resume-theme-btn p-2 rounded-lg text-xs font-semibold border border-indigo-600 bg-indigo-50 text-indigo-700";
-                } else {
-                    b.className = "resume-theme-btn p-2 rounded-lg text-xs font-semibold border border-slate-200 text-slate-600 hover:bg-slate-50";
-                }
-            });
-            generateAIResume();
-        }
-
-        function tailorResumeToJob() {
-            generateAIResume();
-            showToast("Resume tailored to target job specifications!");
-        }
-
-        function generateAIResume() {
-            const cand = getCurrentCandidate();
-            const targetRoleKey = document.getElementById('resumeTargetJobSelect').value;
-            const extra = document.getElementById('resumeExtraAchievements').value.trim();
-
-            let targetTitle = "AI & Machine Learning Engineer";
-            let roleSummary = `Results-driven ${cand.title} with foundational experience developing scalable data pipelines, training neural network architectures, and optimizing statistical models. Proficient in Python, Scikit-learn, and PyTorch with strong mathematical intuition.`;
-            let projects = [
-                {
-                    title: "Transformer-based NLP Recommendation Engine",
-                    desc: "Engineered TF-IDF and vector cosine similarity scoring pipeline handling 10,000+ candidate-job pairings. Improved recommendation relevance by 42% over baseline keyword matching."
-                },
-                {
-                    title: "End-to-End Predictive Analytics Dashboard",
-                    desc: "Constructed Python REST API with FastAPI and SQLite backend to ingest time-series telemetry. Reduced SQL query latency by 35% through B-Tree indexing."
-                }
-            ];
-
-            if (targetRoleKey === 'frontend') {
-                targetTitle = "Frontend Software Engineer (React / TypeScript)";
-                roleSummary = `Creative and performance-focused Frontend Developer with expertise in React 18, TypeScript, and modern component architectures. Dedicated to building accessible, pixel-perfect user interfaces with Tailwind CSS and Next.js.`;
-                projects = [
-                    {
-                        title: "Modular Enterprise Dashboard Portal",
-                        desc: "Architected component library with React and Tailwind CSS. Implemented client-side caching and virtualized scrolling, reducing First Contentful Paint by 48%."
-                    },
-                    {
-                        title: "Collaborative Design System & UI Kit",
-                        desc: "Translated 200+ Figma design tokens into reusable TypeScript components with strict props validation and 95% unit test coverage."
-                    }
-                ];
-            } else if (targetRoleKey === 'fullstack') {
-                targetTitle = "Full-Stack Software Engineer (Python & React)";
-                roleSummary = `Full-stack engineer proficient in Python microservice backends (FastAPI/Flask) and reactive frontends. Experienced in containerized deployment with Docker and PostgreSQL relational database design.`;
-                projects = [
-                    {
-                        title: "High-Throughput Microservice Architecture",
-                        desc: "Developed RESTful services in Python with PostgreSQL storage. Containerized application with Docker, achieving automated CI/CD pipeline deployment in under 3 minutes."
-                    },
-                    {
-                        title: "Cloud Infrastructure Monitoring API",
-                        desc: "Implemented automated health-check endpoints and background task workers with Redis queues, handling 5,000 requests per minute with 99.9% uptime."
-                    }
-                ];
-            } else if (targetRoleKey === 'design') {
-                targetTitle = "Product & UI/UX Designer";
-                roleSummary = `User-centered Product Designer adept in wireframing, interactive prototyping in Figma, design systems, and qualitative user research to drive intuitive customer experiences.`;
-                projects = [
-                    {
-                        title: "FinTech Mobile App Onboarding Redesign",
-                        desc: "Conducted usability interviews with 30 target users and built high-fidelity clickable Figma prototype. Increased onboarding completion rate by 28%."
-                    },
-                    {
-                        title: "Universal Design Token Library",
-                        desc: "Created scalable Figma component library with auto-layout and responsive design variants used by 12 cross-functional engineers."
-                    }
-                ];
-            }
-
-            const canvas = document.getElementById('printableResume');
-            const themeClass = currentResumeTheme === 'minimal' ? 'font-serif' : currentResumeTheme === 'executive' ? 'bg-slate-50/50' : '';
-
-            canvas.className = `bg-white rounded-2xl p-8 sm:p-10 border border-slate-300 shadow-lg text-slate-800 space-y-6 ${themeClass}`;
-
-            canvas.innerHTML = `
-                <!-- Header -->
-                <div class="border-b-2 border-indigo-600 pb-4 flex justify-between items-start">
-                    <div>
-                        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">${cand.name}</h1>
-                        <p class="text-sm font-bold text-indigo-700 mt-0.5">${targetTitle}</p>
-                        <p class="text-xs text-slate-500 mt-1">${cand.email} &bull; github.com/${cand.name.toLowerCase().replace(' ', '')} &bull; linkedin.com/in/${cand.name.toLowerCase().replace(' ', '')}</p>
-                    </div>
-                    <div class="text-right text-xs text-slate-500">
-                        <span class="inline-block px-2.5 py-1 bg-slate-100 rounded font-semibold text-slate-700">${cand.experience_level}</span>
-                    </div>
-                </div>
-
-                <!-- Professional Summary -->
-                <div class="space-y-1.5">
-                    <h2 class="text-xs font-bold text-slate-900 uppercase tracking-widest border-b pb-1">Professional Summary</h2>
-                    <p class="text-xs text-slate-700 leading-relaxed">${roleSummary}</p>
-                    ${extra ? `<p class="text-xs text-slate-700 font-medium italic mt-1">&bull; Key Highlight: ${extra}</p>` : ''}
-                </div>
-
-                <!-- Core Skills -->
-                <div class="space-y-1.5">
-                    <h2 class="text-xs font-bold text-slate-900 uppercase tracking-widest border-b pb-1">Technical Skills & Competencies</h2>
-                    <div class="flex flex-wrap gap-1.5 pt-1">
-                        ${cand.skills.map(s => `
-                            <span class="px-2 py-0.5 rounded text-[11px] bg-slate-100 border border-slate-200 text-slate-800 font-semibold">${s}</span>
-                        `).join('')}
-                    </div>
-                </div>
-
-                <!-- Key Projects (Google X-Y-Z formula) -->
-                <div class="space-y-3">
-                    <h2 class="text-xs font-bold text-slate-900 uppercase tracking-widest border-b pb-1">Featured Technical Projects</h2>
-                    ${projects.map(p => `
-                        <div class="space-y-1">
-                            <div class="flex justify-between text-xs font-bold text-slate-900">
-                                <span>${p.title}</span>
-                                <span class="text-slate-400 font-normal">Production Grade</span>
-                            </div>
-                            <p class="text-xs text-slate-600 leading-relaxed">&bull; ${p.desc}</p>
-                        </div>
-                    `).join('')}
-                </div>
-
-                <!-- Education -->
-                <div class="space-y-1.5">
-                    <h2 class="text-xs font-bold text-slate-900 uppercase tracking-widest border-b pb-1">Education & Credentials</h2>
-                    <div class="flex justify-between items-center text-xs">
-                        <span class="font-bold text-slate-900">${cand.education}</span>
-                        <span class="text-slate-500 font-medium">GPA: 3.8 / 4.0</span>
-                    </div>
-                    ${cand.verified ? '<p class="text-[11px] text-emerald-700 font-semibold mt-1">&check; MatchPortal Verified Pro Certification in Technical Assessment</p>' : ''}
-                </div>
-            `;
-
-            // Calculate ATS Score
-            const atsScore = Math.min(98, 88 + (cand.skills.length > 5 ? 6 : 2) + (extra ? 4 : 0));
-            document.getElementById('atsScoreBadge').innerText = `${atsScore} / 100`;
-            document.getElementById('atsScoreBar').style.width = `${atsScore}%`;
-            document.getElementById('atsFeedback').innerHTML = `&check; High ATS compatibility: Resume matches core keywords for <strong>${targetTitle}</strong> with Google X-Y-Z quantifiable metrics and standard taxonomy.`;
-        }
-
-        function copyResumeText() {
-            const canvas = document.getElementById('printableResume');
-            navigator.clipboard.writeText(canvas.innerText);
-            showToast("Resume plain text copied to clipboard!");
-        }
-
-        // ==============================================================
-        // SKILL QUIZ ARENA (NEW!)
-        // ==============================================================
-        function selectQuizTrack(track) {
-            currentQuizTrack = track;
-            document.querySelectorAll('.quiz-track-btn').forEach(b => {
-                if (b.dataset.track === track) {
-                    b.className = "quiz-track-btn px-4 py-2 rounded-xl text-xs font-bold transition border border-emerald-600 bg-emerald-50 text-emerald-800";
-                } else {
-                    b.className = "quiz-track-btn px-4 py-2 rounded-xl text-xs font-bold transition border border-slate-200 bg-white text-slate-700 hover:bg-slate-50";
-                }
-            });
-            startQuizTrack(track);
-        }
-
-        function startQuizTrack(track) {
-            currentQuizTrack = track;
-            currentQuizIndex = 0;
-            quizScore = 0;
-            quizAnswered = false;
-
-            document.getElementById('quizActiveCard').classList.remove('hidden');
-            document.getElementById('quizResultCard').classList.add('hidden');
-            renderQuizQuestion();
-        }
-
-        function renderQuizQuestion() {
-            quizAnswered = false;
-            const questions = QUIZ_DATA[currentQuizTrack];
-            const q = questions[currentQuizIndex];
-
-            const trackNames = {
-                ai: "Python & Machine Learning Track",
-                react: "React & Modern Frontend Track",
-                fullstack: "Full-Stack & Python APIs Track",
-                sql: "SQL & Data Science Track"
-            };
-
-            document.getElementById('quizTrackTitle').innerText = trackNames[currentQuizTrack];
-            document.getElementById('quizQuestionCount').innerText = `Question ${currentQuizIndex + 1} of ${questions.length}`;
-            document.getElementById('quizLiveScore').innerText = `Score: ${quizScore} / ${currentQuizIndex}`;
-            document.getElementById('quizQuestionText').innerText = q.q;
-
-            const optionsContainer = document.getElementById('quizOptionsContainer');
-            optionsContainer.innerHTML = q.options.map((opt, idx) => `
-                <button onclick="handleQuizAnswer(${idx})" class="quiz-option-btn w-full p-3.5 rounded-xl border border-slate-200 text-left text-xs sm:text-sm font-medium hover:border-indigo-400 hover:bg-indigo-50/50 transition flex items-center justify-between group" data-idx="${idx}">
-                    <span>${String.fromCharCode(65 + idx)}. ${opt}</span>
-                    <i data-lucide="circle" class="w-4 h-4 text-slate-300 group-hover:text-indigo-500"></i>
-                </button>
-            `).join('');
-
-            document.getElementById('quizExplanationBox').classList.add('hidden');
-            document.getElementById('quizNextBtn').disabled = true;
-            lucide.createIcons();
-        }
-
-        function handleQuizAnswer(selectedIdx) {
-            if (quizAnswered) return;
-            quizAnswered = true;
-
-            const questions = QUIZ_DATA[currentQuizTrack];
-            const q = questions[currentQuizIndex];
-            const isCorrect = (selectedIdx === q.answer);
-
-            if (isCorrect) quizScore++;
-
-            document.querySelectorAll('.quiz-option-btn').forEach(btn => {
-                const idx = parseInt(btn.dataset.idx);
-                if (idx === q.answer) {
-                    btn.className = "quiz-option-btn w-full p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 text-left text-xs sm:text-sm font-bold flex items-center justify-between";
-                } else if (idx === selectedIdx) {
-                    btn.className = "quiz-option-btn w-full p-3.5 rounded-xl border-2 border-rose-400 bg-rose-50 text-rose-900 text-left text-xs sm:text-sm font-medium flex items-center justify-between";
-                } else {
-                    btn.classList.add('opacity-50');
-                }
-            });
-
-            // Show explanation
-            const explBox = document.getElementById('quizExplanationBox');
-            explBox.className = `p-4 rounded-xl border text-xs space-y-1 ${isCorrect ? 'bg-emerald-50/80 border-emerald-200 text-emerald-900' : 'bg-rose-50/80 border-rose-200 text-rose-900'}`;
-            document.getElementById('quizExplanationStatus').innerText = isCorrect ? "✓ Correct Answer!" : "✗ Incorrect";
-            document.getElementById('quizExplanationText').innerText = q.explanation;
-            explBox.classList.remove('hidden');
-
-            document.getElementById('quizLiveScore').innerText = `Score: ${quizScore} / ${currentQuizIndex + 1}`;
-            document.getElementById('quizNextBtn').disabled = false;
-        }
-
-        function handleQuizNext() {
-            const questions = QUIZ_DATA[currentQuizTrack];
-            currentQuizIndex++;
-
-            if (currentQuizIndex < questions.length) {
-                renderQuizQuestion();
-            } else {
-                // Completed
-                document.getElementById('quizActiveCard').classList.add('hidden');
-                const resultCard = document.getElementById('quizResultCard');
-                resultCard.classList.remove('hidden');
-
-                const pct = Math.round((quizScore / questions.length) * 100);
-                document.getElementById('quizFinalScoreSummary').innerText = `You scored ${quizScore} out of ${questions.length} (${pct}%).`;
-
-                if (pct >= 80) {
-                    const cand = getCurrentCandidate();
-                    cand.verified = true;
-                    saveCandidateData();
-                    document.getElementById('quizBadgeAward').classList.remove('hidden');
-                    showToast("Congratulations! Verified Skill Badge awarded to your profile!");
-                    updateUI();
-                } else {
-                    document.getElementById('quizBadgeAward').classList.add('hidden');
-                }
+            const tab = document.getElementById('tab-' + tabName);
+            if (tab) {
+                tab.classList.remove('hidden');
+                tab.classList.add('animate-in');
             }
         }
 
-        function restartQuiz() {
-            startQuizTrack(currentQuizTrack);
+        function toggleProfileMenu() {
+            document.getElementById('profileMenu').classList.toggle('hidden');
         }
 
-        // ==============================================================
-        // TECH VOCABULARY & FLASHCARDS LOGIC (NEW!)
-        // ==============================================================
-        function initVocab() {
-            filterVocab('All');
-            updateMasteredCount();
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
         }
 
-        function filterVocab(cat) {
-            currentVocabFilter = cat;
-            document.querySelectorAll('.vocab-filter-btn').forEach(b => {
-                b.className = b.dataset.cat === cat 
-                    ? "vocab-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white"
-                    : "vocab-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200";
-            });
-
-            if (cat === 'All') {
-                filteredVocabList = [...VOCAB_DATA];
-            } else {
-                filteredVocabList = VOCAB_DATA.filter(v => v.category.includes(cat) || cat.includes(v.category));
+        // Close menus when clicking elsewhere
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('[id="profileMenu"], button:has-child(profileMenu)')) {
+                document.getElementById('profileMenu').classList.add('hidden');
             }
-            currentVocabIndex = 0;
-            renderVocabCard();
+        });
+
+        // Job Filtering
+        function filterJobs() {
+            console.log('Filtering jobs...');
         }
 
-        function renderVocabCard() {
-            if (!filteredVocabList.length) return;
-            const item = filteredVocabList[currentVocabIndex];
-
-            // Reset flip
-            isCardFlipped = false;
-            document.getElementById('flashcardInner').classList.remove('rotate-y-180');
-
-            document.getElementById('vocabCardCategory').innerText = item.category;
-            document.getElementById('vocabCardCounter').innerText = `${currentVocabIndex + 1} / ${filteredVocabList.length}`;
-            document.getElementById('vocabCardTerm').innerText = item.term;
-            document.getElementById('vocabCardTermBack').innerText = item.term;
-            document.getElementById('vocabCardDefinition').innerText = item.def;
-            document.getElementById('vocabCardAnalogy').innerHTML = `💡 <strong>Interview Tip:</strong> ${item.analogy}`;
+        function resetJobFilters() {
+            document.getElementById('jobSearch').value = '';
+            document.getElementById('jobLocation').value = '';
+            document.getElementById('jobType').value = '';
         }
 
-        function flipFlashcard() {
-            isCardFlipped = !isCardFlipped;
-            const inner = document.getElementById('flashcardInner');
-            if (isCardFlipped) {
-                inner.classList.add('rotate-y-180');
-            } else {
-                inner.classList.remove('rotate-y-180');
-            }
-        }
-
-        function nextVocab() {
-            if (currentVocabIndex < filteredVocabList.length - 1) {
-                currentVocabIndex++;
-                renderVocabCard();
-            } else {
-                currentVocabIndex = 0;
-                renderVocabCard();
-            }
-        }
-
-        function prevVocab() {
-            if (currentVocabIndex > 0) {
-                currentVocabIndex--;
-                renderVocabCard();
-            }
-        }
-
-        function markVocabMastered() {
-            const item = filteredVocabList[currentVocabIndex];
-            masteredVocabSet.add(item.term);
-            localStorage.setItem('portal_mastered_vocab', JSON.stringify([...masteredVocabSet]));
-            updateMasteredCount();
-            showToast(`Mastered "${item.term}"!`);
-            nextVocab();
-        }
-
-        function updateMasteredCount() {
-            document.getElementById('masteredCount').innerText = masteredVocabSet.size;
-        }
-
-        // ==============================================================
-        // APPLICATION PIPELINE TAB
-        // ==============================================================
-        function renderApplications() {
-            const cand = getCurrentCandidate();
-            document.getElementById('appPipelineCandidateName').innerText = cand.name;
-            const userApps = applications.filter(a => a.candidate_id === cand.id);
-
-            document.getElementById('statTotalApps').innerText = userApps.length;
-            document.getElementById('statReviewingApps').innerText = userApps.filter(a => a.status === 'Under Review').length;
-            document.getElementById('statInterviewApps').innerText = userApps.filter(a => a.status === 'Interviewing').length;
-            document.getElementById('statOfferApps').innerText = userApps.filter(a => ['Shortlisted', 'Accepted'].includes(a.status)).length;
-
-            const container = document.getElementById('applicationsContainer');
-            if (userApps.length === 0) {
-                container.innerHTML = `
-                    <div class="bg-white rounded-2xl p-12 text-center border border-slate-200">
-                        <i data-lucide="inbox" class="w-10 h-10 text-slate-300 mx-auto mb-2"></i>
-                        <p class="text-sm font-semibold text-slate-700">No applications submitted yet.</p>
-                        <button onclick="switchTab('jobs')" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg text-xs font-bold">Browse Recommended Jobs</button>
-                    </div>
-                `;
-            } else {
-                container.innerHTML = userApps.map(app => {
-                    const job = jobs.find(j => j.id === app.job_id) || {};
-                    return `
-                    <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <div class="space-y-1">
-                            <div class="flex items-center space-x-2">
-                                <h3 class="font-bold text-slate-900 text-base">${job.title || 'Role'}</h3>
-                                <span class="px-2 py-0.5 rounded text-xs font-semibold bg-emerald-100 text-emerald-800">${app.status}</span>
-                            </div>
-                            <p class="text-xs text-slate-500">${job.company} &bull; Applied: ${app.date} &bull; ${job.salary || 'Competitive'}</p>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <span class="text-xs font-bold text-indigo-600">${app.match_score}% Match</span>
-                            <button onclick="openJobDetailModal(${job.id})" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold">View Role</button>
-                        </div>
-                    </div>
-                    `;
-                }).join('');
-            }
-            lucide.createIcons();
-        }
-
-        // ==============================================================
-        // PROFILE & SKILLS TAB
-        // ==============================================================
-        function renderProfileForm() {
-            const cand = getCurrentCandidate();
-            document.getElementById('profileCardName').innerText = cand.name;
-            document.getElementById('profileCardTitle').innerText = cand.title;
-            document.getElementById('profileCardType').innerText = `${cand.preferred_type} Seeker`;
-            document.getElementById('profileCardEdu').innerText = cand.education;
-            document.getElementById('profileCardAvatar').src = cand.avatar;
-
-            const badge = document.getElementById('profileVerifiedBadge');
-            if (cand.verified) {
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
-
-            document.getElementById('profNameInput').value = cand.name;
-            document.getElementById('profTitleInput').value = cand.title;
-            document.getElementById('profExpInput').value = cand.experience_level;
-            document.getElementById('profTypeInput').value = cand.preferred_type;
-            document.getElementById('profEduInput').value = cand.education;
-            document.getElementById('profBioInput').value = cand.bio;
-
-            renderProfileSkillChips();
-        }
-
-        function renderProfileSkillChips() {
-            const cand = getCurrentCandidate();
-            document.getElementById('profSkillCount').innerText = `${cand.skills.length} Skills`;
-            document.getElementById('profSkillsChips').innerHTML = cand.skills.map((s, idx) => `
-                <span class="inline-flex items-center px-3 py-1 rounded-lg text-xs font-semibold bg-white border border-indigo-200 text-indigo-700 shadow-2xs">
-                    ${s}
-                    <button type="button" onclick="removeSkill(${idx})" class="ml-1.5 text-slate-400 hover:text-rose-500">&times;</button>
-                </span>
-            `).join('');
-        }
-
-        function removeSkill(idx) {
-            const cand = getCurrentCandidate();
-            cand.skills.splice(idx, 1);
-            saveCandidateData();
-            renderProfileSkillChips();
-        }
-
-        function addSingleSkill(skillName) {
-            const clean = normSkill(skillName);
-            if (!clean) return;
-            const cand = getCurrentCandidate();
-            if (!cand.skills.map(normSkill).includes(clean)) {
-                cand.skills.push(clean);
-                saveCandidateData();
-                renderProfileSkillChips();
-                showToast(`Added skill: ${clean}`);
-            }
-        }
-
-        function handleAddSkillBtn() {
-            const input = document.getElementById('addSkillTextInput');
-            const val = input.value;
-            if (val) {
-                val.split(',').forEach(s => addSingleSkill(s));
-                input.value = '';
-            }
-        }
-
+        // Profile
         function saveProfile(e) {
             e.preventDefault();
-            const cand = getCurrentCandidate();
-            cand.name = document.getElementById('profNameInput').value;
-            cand.title = document.getElementById('profTitleInput').value;
-            cand.experience_level = document.getElementById('profExpInput').value;
-            cand.preferred_type = document.getElementById('profTypeInput').value;
-            cand.education = document.getElementById('profEduInput').value;
-            cand.bio = document.getElementById('profBioInput').value;
-
-            saveCandidateData();
-            updateUI();
-            showToast("Profile saved & match recommendations updated!");
+            showToast('Profile updated successfully!', 'success');
         }
 
-        function saveCandidateData() {
-            localStorage.setItem('portal_candidates', JSON.stringify(candidates));
+        function logout() {
+            showToast('Logging out...', 'info');
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         }
 
-        // ==============================================================
-        // RECRUITER TAB & JOB POSTING
-        // ==============================================================
-        function renderRecruiterView() {
-            const select = document.getElementById('recruiterJobSelect');
-            select.innerHTML = jobs.map(j => `<option value="${j.id}">${j.title} (${j.company})</option>`).join('');
-
-            const selectedJobId = parseInt(select.value || jobs[0].id);
-            const job = jobs.find(j => j.id === selectedJobId) || jobs[0];
-
-            document.getElementById('recruiterJobSummary').innerHTML = `
-                <span>Required Skills: <strong class="text-slate-800">${job.required_skills.join(', ')}</strong></span> &bull;
-                <span>Salary: <strong class="text-emerald-700">${job.salary}</strong></span>
-            `;
-
-            const jobApps = applications.filter(a => a.job_id === job.id);
-            document.getElementById('recruiterAppCount').innerText = jobApps.length;
-            const tableWrapper = document.getElementById('recruiterAppsTableWrapper');
-
-            if (jobApps.length === 0) {
-                tableWrapper.innerHTML = `
-                    <div class="p-8 text-center text-slate-500 text-xs">No direct applicants yet. See AI-ranked platform talent below.</div>
-                `;
-            } else {
-                tableWrapper.innerHTML = `
-                    <table class="w-full text-left text-xs">
-                        <thead class="bg-slate-50 font-bold text-slate-400 uppercase border-b border-slate-200">
-                            <tr>
-                                <th class="px-4 py-3">Candidate</th>
-                                <th class="px-4 py-3">Match Score</th>
-                                <th class="px-4 py-3">Skills</th>
-                                <th class="px-4 py-3">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100">
-                            ${jobApps.map(app => {
-                                const c = candidates.find(cand => cand.id === app.candidate_id) || {};
-                                return `
-                                <tr>
-                                    <td class="px-4 py-3 font-bold text-slate-900">${c.name || 'Candidate'}</td>
-                                    <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full font-bold bg-emerald-100 text-emerald-800">${app.match_score}%</span></td>
-                                    <td class="px-4 py-3 text-slate-500">${(c.skills || []).slice(0, 4).join(', ')}</td>
-                                    <td class="px-4 py-3">
-                                        <select onchange="updateAppStatus(${app.id}, this.value)" class="p-1 border rounded text-xs">
-                                            <option ${app.status === 'Applied' ? 'selected' : ''}>Applied</option>
-                                            <option ${app.status === 'Under Review' ? 'selected' : ''}>Under Review</option>
-                                            <option ${app.status === 'Shortlisted' ? 'selected' : ''}>Shortlisted</option>
-                                            <option ${app.status === 'Interviewing' ? 'selected' : ''}>Interviewing</option>
-                                            <option ${app.status === 'Accepted' ? 'selected' : ''}>Accepted</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                `;
-                            }).join('')}
-                        </tbody>
-                    </table>
-                `;
-            }
-
-            const talentScored = candidates.map(c => ({ ...c, match: calculateMatch(c, job) }))
-                                           .sort((a, b) => b.match.percentage - a.match.percentage);
-
-            document.getElementById('recruiterTalentGrid').innerHTML = talentScored.map(c => `
-                <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-xs flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <img src="${c.avatar}" class="w-10 h-10 rounded-full object-cover">
-                        <div>
-                            <h4 class="font-bold text-slate-900 text-xs">${c.name}</h4>
-                            <p class="text-[11px] text-slate-500">${c.title}</p>
-                            <p class="text-[10px] text-emerald-700 mt-0.5">&check; ${c.match.matchedSkills.slice(0, 3).join(', ')}</p>
-                        </div>
-                    </div>
-                    <span class="px-2.5 py-1 rounded-full text-xs font-bold ${c.match.percentage >= 85 ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'}">
-                        ${c.match.percentage}%
-                    </span>
-                </div>
-            `).join('');
-            lucide.createIcons();
-        }
-
-        function updateAppStatus(appId, newStatus) {
-            const app = applications.find(a => a.id === appId);
-            if (app) {
-                app.status = newStatus;
-                localStorage.setItem('portal_applications', JSON.stringify(applications));
-                showToast(`Status updated to: ${newStatus}`);
-            }
-        }
-
-        function openPostJobModal() { document.getElementById('postJobModal').classList.remove('hidden'); }
-        function closePostJobModal() { document.getElementById('postJobModal').classList.add('hidden'); }
-
-        function handlePostJobSubmit(e) {
-            e.preventDefault();
-            const newJob = {
-                id: Date.now(),
-                title: document.getElementById('newJobTitle').value,
-                company: document.getElementById('newJobCompany').value,
-                logo: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=120",
-                location: document.getElementById('newJobLocation').value,
-                is_remote: true,
-                job_type: document.getElementById('newJobType').value,
-                salary: document.getElementById('newJobSalary').value,
-                required_skills: document.getElementById('newJobReqSkills').value.split(',').map(s => s.trim()),
-                description: document.getElementById('newJobDesc').value
-            };
-            jobs.unshift(newJob);
-            localStorage.setItem('portal_jobs', JSON.stringify(jobs));
-            closePostJobModal();
-            showToast("New Job published successfully!");
-            updateUI();
-            if (!document.getElementById('tab-recruiter').classList.contains('hidden')) renderRecruiterView();
-        }
-
-        // ==============================================================
-        // TOAST NOTIFICATIONS & RESET
-        // ==============================================================
-        function showToast(msg) {
+        // Toast Notifications
+        function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
-            const el = document.createElement('div');
-            el.className = "p-3 rounded-xl bg-slate-900 text-white text-xs shadow-lg border border-slate-700 animate-fade-in pointer-events-auto flex items-center space-x-2";
-            el.innerHTML = `<span>&bull;</span> <span>${msg}</span>`;
-            container.appendChild(el);
-            setTimeout(() => { el.remove(); }, 3500);
-        }
-
-        function resetData() {
-            localStorage.clear();
-            candidates = INITIAL_CANDIDATES;
-            jobs = INITIAL_JOBS;
-            savedJobIds = new Set([1]);
-            activeCandidateId = 1;
-            masteredVocabSet = new Set();
-            updateUI();
-            showToast("Demo data reset to default.");
-        }
-
-        function openJobDetailModal(jobId) {
-            const job = jobs.find(j => j.id === jobId);
-            if (!job) return;
-            selectedJobForModal = job;
-
-            const cand = getCurrentCandidate();
-            const match = calculateMatch(cand, job);
-
-            document.getElementById('modalCompanyLogo').src = job.logo;
-            document.getElementById('modalJobTitle').innerText = job.title;
-            document.getElementById('modalJobMeta').innerText = `${job.company} &bull; ${job.location} &bull; ${job.salary}`;
-            document.getElementById('modalMatchBadgeCircle').innerText = `${match.percentage}%`;
-            document.getElementById('modalMatchLevel').innerText = match.level;
-            document.getElementById('modalMatchReason').innerText = match.reason;
-            document.getElementById('modalSkillScore').innerText = `${match.skillScore}%`;
-            document.getElementById('modalSemanticScore').innerText = `${match.semanticScore}%`;
-
-            document.getElementById('modalMatchedSkills').innerHTML = match.matchedSkills.map(s => `
-                <span class="px-2 py-0.5 rounded text-xs bg-emerald-100 text-emerald-800 font-medium">&check; ${s}</span>
-            `).join('') || '<span class="text-xs text-slate-400 italic">No direct skill matches</span>';
-
-            const missingWrapper = document.getElementById('modalMissingSkillsWrapper');
-            if (match.missingSkills.length) {
-                missingWrapper.classList.remove('hidden');
-                document.getElementById('modalMissingSkills').innerHTML = match.missingSkills.map(s => `
-                    <span class="px-2 py-0.5 rounded text-xs bg-amber-100 text-amber-800 font-medium">+ ${s}</span>
-                `).join('');
-            } else {
-                missingWrapper.classList.add('hidden');
-            }
-
-            document.getElementById('modalJobDescription').innerText = job.description;
-            document.getElementById('modalJobResponsibilities').innerHTML = (job.responsibilities || []).map(r => `<li>${r}</li>`).join('');
-            document.getElementById('modalJobRequirements').innerHTML = (job.requirements || []).map(r => `<li>${r}</li>`).join('');
-
-            const alreadyApplied = applications.some(a => a.job_id === job.id && a.candidate_id === cand.id);
-            const applyBtn = document.getElementById('modalApplyBtn');
-            const applyText = document.getElementById('modalApplyStatusText');
-
-            if (alreadyApplied) {
-                applyBtn.disabled = true;
-                applyBtn.className = "w-full sm:w-auto px-6 py-2.5 bg-emerald-600 text-white font-bold rounded-lg text-xs cursor-default flex items-center justify-center";
-                applyBtn.innerHTML = "&check; Already Applied";
-                applyText.innerText = "You have already submitted your application for this position.";
-            } else {
-                applyBtn.disabled = false;
-                applyBtn.className = "w-full sm:w-auto px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg text-xs shadow-md transition flex items-center justify-center cursor-pointer";
-                applyBtn.innerHTML = "One-Click Apply Now";
-                applyText.innerText = `Applying as ${cand.name} (${cand.email}).`;
-            }
-
-            document.getElementById('jobDetailModal').classList.remove('hidden');
+            const toast = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-success' : type === 'error' ? 'bg-danger' : 'bg-primary-600';
+            
+            toast.className = `toast ${bgColor} text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-2`;
+            toast.innerHTML = `
+                <i data-lucide="${type === 'success' ? 'check' : type === 'error' ? 'alert-circle' : 'info'}" class="w-4 h-4"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
             lucide.createIcons();
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
         }
 
-        function closeJobDetailModal() {
-            document.getElementById('jobDetailModal').classList.add('hidden');
-        }
-
-        function handleModalApply() {
-            if (!selectedJobForModal) return;
-            const cand = getCurrentCandidate();
-            const match = calculateMatch(cand, selectedJobForModal);
-
-            const newApp = {
-                id: Date.now(),
-                job_id: selectedJobForModal.id,
-                candidate_id: cand.id,
-                match_score: match.percentage,
-                status: "Applied",
-                date: new Date().toISOString().slice(0, 10)
-            };
-
-            applications.push(newApp);
-            localStorage.setItem('portal_applications', JSON.stringify(applications));
-            showToast(`Application submitted to ${selectedJobForModal.company} (${match.percentage}% Match)!`);
-            closeJobDetailModal();
-            updateUI();
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const input = document.getElementById('addSkillTextInput');
-            if (input) {
-                input.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') { e.preventDefault(); handleAddSkillBtn(); }
-                });
-            }
-            updateUI();
-        });
+        // Initialize
+        initTheme();
+        switchTab('home');
     </script>
 </body>
 </html>
