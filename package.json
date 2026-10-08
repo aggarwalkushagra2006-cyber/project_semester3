@@ -1,0 +1,13 @@
+{
+  "name": "job_internship_portal",
+  "version": "1.0.0",
+  "description": "An intelligent, full-stack Job and Internship Web Application powered by a **Hybrid AI Recommendation Engine** (Skill Vector Overlap + TF-IDF Semantic Cosine Similarity + Preference Alignment).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
