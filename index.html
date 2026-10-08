@@ -1,8 +1,604 @@
-<!-- Standalone Launcher for MatchPortal: Opens directly in any browser -->
-<script>
-    window.location.href = "portal.html";
-</script>
-<noscript>
-    <meta http-equiv="refresh" content="0; url=portal.html" />
-    <p>Redirecting to <a href="portal.html">MatchPortal Web App</a>...</p>
-</noscript>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerMatch - AI-Powered Job Discovery Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap');
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --accent: #ec4899;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+            color: var(--gray-800);
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Smooth gradient backgrounds */
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary) 0%, #6ee7b7 100%);
+        }
+
+        /* Smooth animations */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .animate-in {
+            animation: slideInUp 0.6s ease-out forwards;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Smooth transitions */
+        * {
+            transition: all 0.3s ease;
+        }
+
+        button, a {
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Custom button styles */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-800);
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Card hover effects */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .card:hover {
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+            transform: translateY(-4px);
+        }
+
+        /* Badge styles */
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-primary {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        /* Match score animation */
+        .match-score {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 20px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Input styling */
+        input, select, textarea {
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Loading skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-100) 50%, var(--gray-200) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+
+    <!-- Navigation Bar -->
+    <nav class="glass sticky top-0 z-50 border-b border-white/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-2 cursor-pointer">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-pink-600 flex items-center justify-center">
+                        <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold gradient-text">CareerMatch</h1>
+                        <p class="text-xs text-gray-500">AI Job Discovery</p>
+                    </div>
+                </div>
+
+                <!-- Nav Links -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#" class="text-sm font-500 text-gray-600 hover:text-indigo-600">Browse Jobs</a>
+                    <a href="#" class="text-sm font-500 text-gray-600 hover:text-indigo-600">For Recruiters</a>
+                    <a href="#" class="text-sm font-500 text-gray-600 hover:text-indigo-600">Resources</a>
+                </div>
+
+                <!-- Auth Buttons -->
+                <div class="flex items-center gap-3">
+                    <button class="btn-secondary hidden sm:block">Sign In</button>
+                    <button class="btn-primary">Get Started</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden pt-20 pb-32">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Left Content -->
+                <div class="space-y-8 animate-in">
+                    <div class="space-y-4">
+                        <h2 class="text-5xl md:text-6xl font-bold text-gray-900 leading-tight">
+                            Find Your <span class="gradient-text">Perfect Job</span> Match
+                        </h2>
+                        <p class="text-lg text-gray-600 leading-relaxed">
+                            Powered by AI, CareerMatch analyzes your skills and matches you with jobs that truly fit. Discover opportunities tailored just for you.
+                        </p>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="grid grid-cols-3 gap-4 pt-8 border-t border-gray-200">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900">10K+</h3>
+                            <p class="text-sm text-gray-600">Active Jobs</p>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900">500+</h3>
+                            <p class="text-sm text-gray-600">Companies</p>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900">95%</h3>
+                            <p class="text-sm text-gray-600">Match Rate</p>
+                        </div>
+                    </div>
+
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                        <button class="btn-primary px-8 py-3 text-base flex items-center justify-center gap-2">
+                            <i data-lucide="search" class="w-5 h-5"></i> Explore Jobs
+                        </button>
+                        <button class="btn-secondary px-8 py-3 text-base flex items-center justify-center gap-2">
+                            <i data-lucide="play-circle" class="w-5 h-5"></i> Watch Demo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Visual -->
+                <div class="relative h-500 hidden lg:flex items-center justify-center fade-in">
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-400/20 to-pink-400/20 rounded-3xl blur-3xl"></div>
+                    <div class="relative card shadow-xl">
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-400 to-indigo-600"></div>
+                                <span class="badge badge-success">92% Match</span>
+                            </div>
+                            <div class="space-y-2">
+                                <h4 class="font-bold text-gray-900">Senior Product Designer</h4>
+                                <p class="text-sm text-gray-600">Google • San Francisco, CA</p>
+                            </div>
+                            <div class="flex flex-wrap gap-2 pt-4">
+                                <span class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-600">UI/UX</span>
+                                <span class="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-xs font-600">Figma</span>
+                                <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-600">Design Systems</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 bg-white/40 backdrop-blur-sm border-t border-white/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 animate-in">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Why Choose CareerMatch?</h2>
+                <p class="text-lg text-gray-600">Revolutionizing how you find your next opportunity</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="card group hover:shadow-2xl" style="animation-delay: 0.1s;" class="animate-in">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-100 to-indigo-200 flex items-center justify-center mb-4 group-hover:scale-110">
+                        <i data-lucide="brain" class="w-6 h-6 text-indigo-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">AI-Powered Matching</h3>
+                    <p class="text-gray-600">Advanced algorithms analyze your profile and match you with jobs you'll actually love.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="card group hover:shadow-2xl" style="animation-delay: 0.2s;" class="animate-in">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center mb-4 group-hover:scale-110">
+                        <i data-lucide="zap" class="w-6 h-6 text-pink-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Instant Insights</h3>
+                    <p class="text-gray-600">Get real-time feedback on how well you match each position with detailed breakdowns.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="card group hover:shadow-2xl" style="animation-delay: 0.3s;" class="animate-in">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center mb-4 group-hover:scale-110">
+                        <i data-lucide="trending-up" class="w-6 h-6 text-purple-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Career Growth</h3>
+                    <p class="text-gray-600">Identify skill gaps and get personalized learning recommendations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Job Listings Section -->
+    <section class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between mb-12 animate-in">
+                <div>
+                    <h2 class="text-4xl font-bold text-gray-900">Featured Opportunities</h2>
+                    <p class="text-gray-600 mt-2">Curated for top performers like you</p>
+                </div>
+                <a href="#" class="text-indigo-600 font-600 hover:text-indigo-700 flex items-center gap-2">
+                    View All <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+
+            <!-- Search & Filters -->
+            <div class="mb-8 glass p-6 rounded-xl">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1 relative">
+                        <i data-lucide="search" class="absolute left-3 top-3 w-5 h-5 text-gray-400"></i>
+                        <input type="text" placeholder="Search jobs, companies, skills..." class="w-full pl-10">
+                    </div>
+                    <select class="md:w-48">
+                        <option>All Locations</option>
+                        <option>Remote</option>
+                        <option>San Francisco</option>
+                        <option>New York</option>
+                    </select>
+                    <select class="md:w-48">
+                        <option>All Levels</option>
+                        <option>Internship</option>
+                        <option>Entry Level</option>
+                        <option>Senior</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Job Cards Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Job Card 1 -->
+                <div class="card hover:border-indigo-300" style="animation-delay: 0.1s;" class="animate-in">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900">Senior Product Designer</h3>
+                            <p class="text-gray-600 mt-1">Google • San Francisco, CA</p>
+                        </div>
+                        <span class="match-score" style="width: 56px; height: 56px; font-size: 18px;">92%</span>
+                    </div>
+                    
+                    <p class="text-gray-600 mb-4">Lead design initiatives for our next generation of products. Work with world-class engineers and product managers.</p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-600">UI/UX</span>
+                        <span class="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-xs font-600">Figma</span>
+                        <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-600">Design Systems</span>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <div class="flex items-center gap-2 text-sm text-gray-600">
+                            <i data-lucide="briefcase" class="w-4 h-4"></i>
+                            Full-time
+                        </div>
+                        <button class="btn-primary text-sm py-2 px-4">View Details</button>
+                    </div>
+                </div>
+
+                <!-- Job Card 2 -->
+                <div class="card hover:border-indigo-300" style="animation-delay: 0.2s;" class="animate-in">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900">Full-Stack Engineer</h3>
+                            <p class="text-gray-600 mt-1">Microsoft • Seattle, WA</p>
+                        </div>
+                        <span class="match-score" style="width: 56px; height: 56px; font-size: 18px;">88%</span>
+                    </div>
+                    
+                    <p class="text-gray-600 mb-4">Build scalable web applications using modern tech stack. Collaborate with cross-functional teams.</p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-600">React</span>
+                        <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-600">Python</span>
+                        <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-600">AWS</span>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <div class="flex items-center gap-2 text-sm text-gray-600">
+                            <i data-lucide="briefcase" class="w-4 h-4"></i>
+                            Full-time
+                        </div>
+                        <button class="btn-primary text-sm py-2 px-4">View Details</button>
+                    </div>
+                </div>
+
+                <!-- Job Card 3 -->
+                <div class="card hover:border-indigo-300" style="animation-delay: 0.3s;" class="animate-in">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900">AI/ML Engineer</h3>
+                            <p class="text-gray-600 mt-1">OpenAI • San Francisco, CA</p>
+                        </div>
+                        <span class="match-score" style="width: 56px; height: 56px; font-size: 18px;">95%</span>
+                    </div>
+                    
+                    <p class="text-gray-600 mb-4">Work on cutting-edge AI models. Research and deploy machine learning solutions at scale.</p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-600">Python</span>
+                        <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-600">TensorFlow</span>
+                        <span class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-600">PyTorch</span>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <div class="flex items-center gap-2 text-sm text-gray-600">
+                            <i data-lucide="briefcase" class="w-4 h-4"></i>
+                            Full-time
+                        </div>
+                        <button class="btn-primary text-sm py-2 px-4">View Details</button>
+                    </div>
+                </div>
+
+                <!-- Job Card 4 -->
+                <div class="card hover:border-indigo-300" style="animation-delay: 0.4s;" class="animate-in">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900">Product Manager</h3>
+                            <p class="text-gray-600 mt-1">Meta • Menlo Park, CA</p>
+                        </div>
+                        <span class="match-score" style="width: 56px; height: 56px; font-size: 18px;">85%</span>
+                    </div>
+                    
+                    <p class="text-gray-600 mb-4">Lead product strategy and roadmap. Drive adoption and growth across millions of users globally.</p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs font-600">Analytics</span>
+                        <span class="px-3 py-1 bg-fuchsia-100 text-fuchsia-700 rounded-full text-xs font-600">Strategy</span>
+                        <span class="px-3 py-1 bg-lime-100 text-lime-700 rounded-full text-xs font-600">Growth</span>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <div class="flex items-center gap-2 text-sm text-gray-600">
+                            <i data-lucide="briefcase" class="w-4 h-4"></i>
+                            Full-time
+                        </div>
+                        <button class="btn-primary text-sm py-2 px-4">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-pink-600 opacity-90"></div>
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml,...')] opacity-10"></div>
+        
+        <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Ready to Land Your Dream Job?</h2>
+            <p class="text-xl text-indigo-100 mb-8">Join thousands of professionals who've found their perfect match.</p>
+            <button class="btn-primary bg-white text-indigo-600 hover:bg-gray-50 px-8 py-4 text-lg font-bold shadow-2xl">
+                Get Started for Free
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-white font-bold mb-4">CareerMatch</h3>
+                    <p class="text-sm">AI-powered job discovery platform.</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Product</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white">Browse Jobs</a></li>
+                        <li><a href="#" class="hover:text-white">For Recruiters</a></li>
+                        <li><a href="#" class="hover:text-white">Pricing</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Company</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white">About</a></li>
+                        <li><a href="#" class="hover:text-white">Blog</a></li>
+                        <li><a href="#" class="hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white">Privacy</a></li>
+                        <li><a href="#" class="hover:text-white">Terms</a></li>
+                        <li><a href="#" class="hover:text-white">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-sm">
+                <p>&copy; 2024 CareerMatch. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Button interactions
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', function() {
+                console.log('Button clicked:', this.textContent);
+            });
+        });
+    </script>
+</body>
+</html>
